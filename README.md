@@ -96,7 +96,7 @@ Exemplos:
   #define BUFFER_MAX_LENGTH
 
   typedef enum{
-	UART_ONE_STOP_BIT = 0U, 
+    UART_ONE_STOP_BIT = 0U, 
     UART_TWO_STOP_BIT 
   }uartStopBitNum_t;
 ```
@@ -112,6 +112,6 @@ Exemplos:
 ```c
   OS_Task_Create();
   OS_Semaphore_Take();
-  Kernel_Task_ConfirmSleepModeStatus;
+  Kernel_Task_ConfirmSleepModeStatus();
   Kernel_Timer_GenericCommand();
 ```
