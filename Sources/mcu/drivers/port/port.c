@@ -31,7 +31,7 @@
  * ********************************************************************/
 void PORT_Init(PORT_Type* base)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	if( PORTA == base )
 	{
@@ -65,8 +65,8 @@ void PORT_Init(PORT_Type* base)
  * ********************************************************************/
 void PORT_EnableIRQ(PORT_Type *base, uint8_t pin, portIRQ_t irq)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PCR[pin] &= ~PORT_PCR_IRQC_MASK; /*Limpa configurações anteriores*/
 	base->PCR[pin] |= PORT_PCR_IRQC(irq);
@@ -87,8 +87,8 @@ void PORT_EnableIRQ(PORT_Type *base, uint8_t pin, portIRQ_t irq)
  * ********************************************************************/
 uint32_t PORT_GetIRQFlag(PORT_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	return base->ISFR & ((uint32_t)1 << pin);
 }
@@ -107,8 +107,8 @@ uint32_t PORT_GetIRQFlag(PORT_Type *base, uint8_t pin)
  * ********************************************************************/
 void PORT_ClearIRQFlag(PORT_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->ISFR = ( (uint32_t) 1 << pin );
 }
@@ -127,8 +127,8 @@ void PORT_ClearIRQFlag(PORT_Type *base, uint8_t pin)
  * ********************************************************************/
 void PORT_EnablePull(PORT_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PCR[pin] |= PORT_PCR_PE_MASK;
 }
@@ -147,8 +147,8 @@ void PORT_EnablePull(PORT_Type *base, uint8_t pin)
  * ********************************************************************/
 void PORT_EnableHighStrength(PORT_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PCR[pin] |= PORT_PCR_DSE_MASK;
 }
@@ -168,8 +168,8 @@ void PORT_EnableHighStrength(PORT_Type *base, uint8_t pin)
  * ********************************************************************/
 void PORT_SetMux(PORT_Type *base, uint8_t pin, portMux_t mux)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PCR[pin] &= ~PORT_PCR_MUX_MASK; /*Limpa configurações anteriores*/
 	base->PCR[pin] |= PORT_PCR_MUX(mux);

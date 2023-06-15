@@ -145,7 +145,7 @@ void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfi
  * ********************************************************************/
 static inline void TPM_InitCounter(TPM_Type *base)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 	base->SC |= (TPM_SC_CMOD(0x1U));
 }
 
@@ -162,7 +162,7 @@ static inline void TPM_InitCounter(TPM_Type *base)
  * ********************************************************************/
 static inline void TPM_StopCounter(TPM_Type *base)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 	base->SC &= ~(TPM_SC_CMOD(0x1U));
 }
 
@@ -181,7 +181,7 @@ static inline void TPM_StopCounter(TPM_Type *base)
  * ********************************************************************/
 static inline void TPM_SetCounterClkSrc(TPM_Type *base, tpmClkSrc_t src)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	SIM->SOPT2 &= ~SIM_SOPT2_TPMSRC_MASK;
 	SIM->SOPT2 |= SIM_SOPT2_TPMSRC(src);
@@ -201,7 +201,7 @@ static inline void TPM_SetCounterClkSrc(TPM_Type *base, tpmClkSrc_t src)
  * ********************************************************************/
 static inline void TPM_SetStopOnOverflow(TPM_Type *base)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 	base->CONF |= (TPM_CONF_CSOO(0x1U));
 }
 
@@ -219,7 +219,7 @@ static inline void TPM_SetStopOnOverflow(TPM_Type *base)
  * ********************************************************************/
 static inline void TPM_SetContinueOnOverflow(TPM_Type *base)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 	base->CONF &= ~(TPM_CONF_CSOO(0x1U));
 }
 
@@ -239,7 +239,7 @@ static inline void TPM_SetContinueOnOverflow(TPM_Type *base)
  * ********************************************************************/
 static inline uint16_t TPM_GetChValue(TPM_Type *base, uint8_t channel)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	return (uint16_t)base->CONTROLS[channel].CnV;
 }
@@ -260,7 +260,7 @@ static inline uint16_t TPM_GetChValue(TPM_Type *base, uint8_t channel)
  * ********************************************************************/
 static inline void TPM_SetChMatch(TPM_Type *base, uint8_t channel, uint16_t match)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CONTROLS[channel].CnV = match;
 }
@@ -278,7 +278,8 @@ static inline void TPM_SetChMatch(TPM_Type *base, uint8_t channel, uint16_t matc
  * ********************************************************************/
 static inline void TPM_EnableIRQ(TPM_Type *base)
 {
-   base->SC |= TPM_SC_TOIE_MASK;
+	SYSTEM_ASSERT(base);
+	base->SC |= TPM_SC_TOIE_MASK;
 }
 
 /**********************************************************************
@@ -296,7 +297,8 @@ static inline void TPM_EnableIRQ(TPM_Type *base)
  * ********************************************************************/
 static inline uint32_t TPM_GetIRQFlag(TPM_Type *base)
 {
-   return base->SC & TPM_SC_TOF_MASK;
+	SYSTEM_ASSERT(base);
+	return base->SC & TPM_SC_TOF_MASK;
 }
 
 /**********************************************************************
@@ -312,6 +314,7 @@ static inline uint32_t TPM_GetIRQFlag(TPM_Type *base)
  * ********************************************************************/
 static inline void TPM_ClearIRQFlag(TPM_Type *base)
 {
+	SYSTEM_ASSERT(base);
 	base->SC |= TPM_SC_TOF_MASK;
 }
 
@@ -329,7 +332,7 @@ static inline void TPM_ClearIRQFlag(TPM_Type *base)
  * ********************************************************************/
 static inline void TPM_SetModulo(TPM_Type *base, uint16_t modulo)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->MOD = modulo;
 }

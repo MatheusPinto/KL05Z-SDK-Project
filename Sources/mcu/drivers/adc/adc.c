@@ -20,7 +20,7 @@
 
 void ADC_SetLongSampleTimeMode( ADC_Type *base, adcLongSampleMode_t mode )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 &= ~ADC_CFG1_ADLSMP_MASK; /*Limpa configurações anteriores*/
 	if ( mode != ADC_LONG_SAMPLE_DISABLE )
@@ -34,6 +34,8 @@ void ADC_SetLongSampleTimeMode( ADC_Type *base, adcLongSampleMode_t mode )
 
 uint8_t ADC_DoAutoCalibration(ADC_Type *base)
 {
+	SYSTEM_ASSERT(base);
+
     bool bHWTrigger = false;
     volatile uint32_t tmp32; /* 'volatile' here is for the dummy read of ADCx_R[0] register. */
     uint8_t status = SYSTEM_STATUS_SUCCESS;
@@ -85,6 +87,8 @@ uint8_t ADC_DoAutoCalibration(ADC_Type *base)
 
 void ADC_SetHardwareCompareConfig(ADC_Type *base, adcHardwareCompareMode_t hardwareCompareMode, int16_t value1, int16_t value2)
 {
+	SYSTEM_ASSERT(base);
+
     uint32_t tmp32 = base->SC2 & ~(ADC_SC2_ACFE_MASK | ADC_SC2_ACFGT_MASK | ADC_SC2_ACREN_MASK);
 
     /* Enable the feature. */
@@ -117,6 +121,8 @@ void ADC_SetHardwareCompareConfig(ADC_Type *base, adcHardwareCompareMode_t hardw
 
 void ADC_SetHardwareAverage(ADC_Type *base, adcHardwareAverageMode_t mode)
 {
+	SYSTEM_ASSERT(base);
+
     uint32_t tmp32 = base->SC3 & ~(ADC_SC3_AVGE_MASK | ADC_SC3_AVGS_MASK);
 
     if (mode != ADC_HARDWARE_AVG_DISABLE)
@@ -129,6 +135,8 @@ void ADC_SetHardwareAverage(ADC_Type *base, adcHardwareAverageMode_t mode)
 
 uint32_t ADC_GetStatusFlags(ADC_Type *base)
 {
+	SYSTEM_ASSERT(base);
+
     uint32_t ret = 0;
 
     if (0U != (base->SC2 & ADC_SC2_ADACT_MASK))
@@ -144,12 +152,14 @@ uint32_t ADC_GetStatusFlags(ADC_Type *base)
 
 void ADC_ClearCalibStatusFlags(ADC_Type *base)
 {
+	SYSTEM_ASSERT(base);
+
 	base->SC3 |= ADC_SC3_CALF_MASK;
 }
 
 void ADC_SetChConfig(ADC_Type *base, uint32_t channelNumber, bool enableIRQ)
 {
-    assert(base);
+	SYSTEM_ASSERT(base);
 
     uint32_t sc1 = ADC_SC1_ADCH(channelNumber); /* Set the channel number. */
 
@@ -166,7 +176,7 @@ void ADC_SetChConfig(ADC_Type *base, uint32_t channelNumber, bool enableIRQ)
 
 bool ADC_IsConversionDone( ADC_Type *base )
 {
-    assert(base);
+	SYSTEM_ASSERT(base);
 
     bool ret = false;
 

@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <MKL05Z4.h>
+#include <system/assert.h>
 #include <system/status_code.h>
 
 

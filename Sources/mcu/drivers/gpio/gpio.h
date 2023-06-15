@@ -91,8 +91,8 @@ void GPIO_InitOutputPin(GPIO_Type *base, uint8_t pin, uint8_t initVal);
  * ********************************************************************/
 static inline void GPIO_SetPin(GPIO_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PSOR = (1 << pin);
 }
@@ -111,8 +111,8 @@ static inline void GPIO_SetPin(GPIO_Type *base, uint8_t pin)
  * ********************************************************************/
 static inline void GPIO_ClearPin(GPIO_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PCOR = (1 << pin);
 }
@@ -131,8 +131,8 @@ static inline void GPIO_ClearPin(GPIO_Type *base, uint8_t pin)
  * ********************************************************************/
 static inline void GPIO_TogglePin(GPIO_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	base->PTOR = (1 << pin);
 }
@@ -152,8 +152,8 @@ static inline void GPIO_TogglePin(GPIO_Type *base, uint8_t pin)
  * ********************************************************************/
 static inline uint8_t GPIO_ReadPin(GPIO_Type *base, uint8_t pin)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	return (uint8_t)((base->PDIR & (((uint32_t)1) << pin)) != 0);
 }
@@ -173,8 +173,8 @@ static inline uint8_t GPIO_ReadPin(GPIO_Type *base, uint8_t pin)
  * ********************************************************************/
 static inline void GPIO_WritePin(GPIO_Type *base, uint8_t pin, uint8_t value)
 {
-	assert(base);
-	assert( ( pin >= 0 ) && ( pin < 32 ) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( pin >= 0 ) && ( pin < 32 ) );
 
 	if(pin)
 	{
@@ -201,7 +201,7 @@ static inline void GPIO_WritePin(GPIO_Type *base, uint8_t pin, uint8_t value)
  * ********************************************************************/
 static inline void GPIO_SetPinsMask(GPIO_Type *base, uint32_t mask)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->PSOR = mask;
 }
@@ -221,7 +221,7 @@ static inline void GPIO_SetPinsMask(GPIO_Type *base, uint32_t mask)
  * ********************************************************************/
 static inline void GPIO_ClearPinsMask(GPIO_Type *base, uint32_t mask)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->PCOR = mask;
 }

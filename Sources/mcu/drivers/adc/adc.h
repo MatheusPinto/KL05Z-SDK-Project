@@ -275,7 +275,7 @@ uint8_t ADC_DoAutoCalibration(ADC_Type *base);
  * ********************************************************************/
 static inline void ADC_SetClockDiv( ADC_Type *base, adcClockDivider_t div )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 &= ~ADC_CFG1_ADIV_MASK;
 	base->CFG1 |= ADC_CFG1_ADIV(div);
@@ -295,7 +295,7 @@ static inline void ADC_SetClockDiv( ADC_Type *base, adcClockDivider_t div )
  * ********************************************************************/
 static inline void ADC_SetResolution( ADC_Type *base, adcResolution_t res )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 &= ~ADC_CFG1_MODE_MASK;
 	base->CFG1 |= ADC_CFG1_MODE(res);
@@ -314,7 +314,7 @@ static inline void ADC_SetResolution( ADC_Type *base, adcResolution_t res )
  * ********************************************************************/
 static inline void ADC_SetLowPowerMode( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 |= ADC_CFG1_ADLPC_MASK;
 }
@@ -332,7 +332,7 @@ static inline void ADC_SetLowPowerMode( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetNormalPowerMode( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 &= ~ADC_CFG1_ADLPC_MASK;
 }
@@ -350,7 +350,7 @@ static inline void ADC_SetNormalPowerMode( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetHighSpeedMode( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG2 |= ADC_CFG2_ADLSTS_MASK;
 }
@@ -368,7 +368,7 @@ static inline void ADC_SetHighSpeedMode( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetNormalSpeedMode( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG2 &= ~ADC_CFG2_ADLSTS_MASK;
 }
@@ -386,7 +386,7 @@ static inline void ADC_SetNormalSpeedMode( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_EnableAsyncClkOut( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG2 |= ADC_CFG2_ADACKEN_MASK;
 }
@@ -404,7 +404,7 @@ static inline void ADC_EnableAsyncClkOut( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_DisableAsyncClkOut( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG2 &= ~ADC_CFG2_ADACKEN_MASK;
 }
@@ -422,7 +422,7 @@ static inline void ADC_DisableAsyncClkOut( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetVAltVoltage( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->SC2 &= ~ADC_SC2_REFSEL_MASK;
 	base->SC2 |= ADC_SC2_REFSEL(1U);
@@ -441,7 +441,7 @@ static inline void ADC_SetVAltVoltage( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetVRefVoltage( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->SC2 &= ~ADC_SC2_REFSEL_MASK;
 }
@@ -459,7 +459,7 @@ static inline void ADC_SetVRefVoltage( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_EnableContinuousConversion( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->SC3 |= ADC_SC3_ADCO_MASK;
 }
@@ -477,7 +477,7 @@ static inline void ADC_EnableContinuousConversion( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_DisableContinuousConversion( ADC_Type *base )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->SC3 &= ~ADC_SC3_ADCO_MASK;
 }
@@ -496,7 +496,7 @@ static inline void ADC_DisableContinuousConversion( ADC_Type *base )
  * ********************************************************************/
 static inline void ADC_SetInputInternalClock( ADC_Type *base, adcClockSource_t clk )
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	base->CFG1 &= ~ADC_CFG1_ADICLK_MASK;
 	base->CFG1 |= ADC_CFG1_ADICLK(clk);
@@ -515,7 +515,7 @@ static inline void ADC_SetInputInternalClock( ADC_Type *base, adcClockSource_t c
  * ********************************************************************/
 static inline void ADC_Init(ADC_Type *base)
 {
-    assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
     /* Enable the clock. */
     SIM->SCGC6 |= SIM_SCGC6_ADC0_MASK;
@@ -534,7 +534,7 @@ static inline void ADC_Init(ADC_Type *base)
  * ********************************************************************/
 static inline void ADC_Deinit(ADC_Type *base)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
     /* Disable the clock. */
 	SIM->SCGC6 &= ~SIM_SCGC6_ADC0_MASK;
@@ -558,7 +558,7 @@ static inline void ADC_Deinit(ADC_Type *base)
  * ********************************************************************/
 static inline void ADC_SetOffsetValue(ADC_Type *base, int16_t value)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
     base->OFS = (uint32_t)(value);
 }
@@ -577,7 +577,7 @@ static inline void ADC_SetOffsetValue(ADC_Type *base, int16_t value)
  * ********************************************************************/
 static inline void ADC_EnableDMA(ADC_Type *base)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
 	base->SC2 |= ADC_SC2_DMAEN_MASK;
 }
@@ -596,7 +596,7 @@ static inline void ADC_EnableDMA(ADC_Type *base)
  * ********************************************************************/
 static inline void ADC_DisableDMA(ADC_Type *base)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
 	base->SC2 &= ~ADC_SC2_DMAEN_MASK;
 }
@@ -617,7 +617,7 @@ static inline void ADC_DisableDMA(ADC_Type *base)
  * ********************************************************************/
 static inline void ADC_EnableHardwareTrigger(ADC_Type *base, adcHardwareTriggerSrc_t src)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
 	/* Configure SIM for ADC hw trigger source selection */
 	SIM->SOPT7 |= SIM_SOPT7_ADC0ALTTRGEN_MASK;
@@ -639,7 +639,7 @@ static inline void ADC_EnableHardwareTrigger(ADC_Type *base, adcHardwareTriggerS
  * ********************************************************************/
 static inline void ADC_DisableHardwareTrigger(ADC_Type *base)
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
 	base->SC2 &= ~ADC_SC2_ADTRG_MASK;
 }
@@ -657,7 +657,7 @@ static inline void ADC_DisableHardwareTrigger(ADC_Type *base)
  * ********************************************************************/
 static inline uint32_t ADC_GetChConversionValue( ADC_Type *base )
 {
-	assert(NULL != base);
+	SYSTEM_ASSERT(NULL != base);
 
     return base->R[0];
 }

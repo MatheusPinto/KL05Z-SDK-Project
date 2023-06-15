@@ -34,7 +34,7 @@
  * ********************************************************************/
 void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale)
 {
-	assert(base);
+	SYSTEM_ASSERT(base);
 
 	if (TPM0 == base)
 	{
@@ -76,8 +76,8 @@ void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale)
  * ********************************************************************/
 void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfig_t config){
 
-	assert(base);
-	assert( ( chNum >=0 ) && (chNum < 7) );
+	SYSTEM_ASSERT(base);
+	SYSTEM_ASSERT( ( chNum >=0 ) && (chNum < 7) );
 
 	switch(mode)
 	{

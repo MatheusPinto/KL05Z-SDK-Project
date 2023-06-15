@@ -141,6 +141,7 @@ void UART_Init( UART0_Type * base,
  * ********************************************************************/
 static inline uint8_t UART_IsRxOverrun(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)((base->S1 & UART0_S1_OR_MASK) != 0);
 }
 
@@ -158,6 +159,7 @@ static inline uint8_t UART_IsRxOverrun(UART0_Type * base)
  * ********************************************************************/
 static inline uint8_t UART_IsFramingError(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)((UART0_S1 & UART0_S1_FE_MASK) != 0);
 }
 
@@ -175,6 +177,7 @@ static inline uint8_t UART_IsFramingError(UART0_Type * base)
  * ********************************************************************/
 static inline uint8_t UART_IsParityError(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)((UART0_S1 & UART0_S1_PF_MASK) != 0);
 }
 
@@ -191,6 +194,7 @@ static inline uint8_t UART_IsParityError(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_CleanRxBuffer(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	UART_IsRxAvailable(base);  /*Lê o registrador UART_S1*/
 	UART_Read(base);
 }
@@ -208,6 +212,8 @@ static inline void UART_CleanRxBuffer(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_Deinit(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
+
 	SIM_SCGC4 &= ~SIM_SCGC4_UART0_MASK;
 
 	NVIC_DisableIRQ(UART0_IRQn);
@@ -227,6 +233,7 @@ static inline void UART_Deinit(UART0_Type * base)
  * ********************************************************************/
 static inline uint8_t UART_IsRxAvailable(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)((UART0_S1 & UART0_S1_RDRF_MASK) != 0);
 }
 
@@ -244,6 +251,7 @@ static inline uint8_t UART_IsRxAvailable(UART0_Type * base)
  * ********************************************************************/
 static inline uint8_t UART_IsTxAvailable(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)((UART0_S1 & UART0_S1_TDRE_MASK) != 0);
 }
 
@@ -261,6 +269,7 @@ static inline uint8_t UART_IsTxAvailable(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_Write(UART0_Type * base, uint8_t data)
 {
+	SYSTEM_ASSERT(base);
 	UART0_D = data;
 }
 
@@ -280,6 +289,7 @@ static inline void UART_Write(UART0_Type * base, uint8_t data)
  * ********************************************************************/
 static inline uint8_t UART_Read(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	return (uint8_t)UART0_D;
 }
 
@@ -297,6 +307,7 @@ static inline uint8_t UART_Read(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_EnableTxIRQ(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	UART0_C2 |= UART0_C2_TIE_MASK;
 }
 
@@ -314,6 +325,7 @@ static inline void UART_EnableTxIRQ(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_EnableRxIRQ(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	/*Habilita interrupção de recepção completa, overrun e framing error*/
 	UART0_C2 |= UART0_C2_RIE_MASK;
 	UART0_C3 |= UART0_C3_ORIE_MASK | UART0_C3_FEIE_MASK;
@@ -333,6 +345,7 @@ static inline void UART_EnableRxIRQ(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_DisableTxIRQ(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	UART0_C2 &= ~UART0_C2_TIE_MASK;
 }
 
@@ -350,6 +363,7 @@ static inline void UART_DisableTxIRQ(UART0_Type * base)
  * ********************************************************************/
 static inline void UART_DisableRxIRQ(UART0_Type * base)
 {
+	SYSTEM_ASSERT(base);
 	UART0_C2 &= ~UART0_C2_RIE_MASK;
 }
 
