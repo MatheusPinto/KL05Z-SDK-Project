@@ -1,36 +1,36 @@
 /***************************************************************************************
- * Módulo      : tpm.c
- * Revisão     : 1.1
+ * Mï¿½dulo      : tpm.c
+ * Revisï¿½o     : 1.1
  * Data        : 24/05/2023
- * Descrição   : Arquivo com implementações dos Módulos Timer/PWM (TPM) da Familia Kinetis KL05.
- * Comentários : Nenhum.
+ * Descriï¿½ï¿½o   : Arquivo com implementaï¿½ï¿½es dos Mï¿½dulos Timer/PWM (TPM) da Familia Kinetis KL05.
+ * Comentï¿½rios : Nenhum.
  * Autor(es)   : Matheus Leitzke Pinto
  ***************************************************************************************/
 
-/*ARQUIVOS DE CABEÇALHO*/
+/*ARQUIVOS DE CABEï¿½ALHO*/
 /*=======================================================================================*/
 
 #include "tpm.h"
 
-/*FIM: ARQUIVOS DE CABEÇALHO*/
+/*FIM: ARQUIVOS DE CABEï¿½ALHO*/
 /*=======================================================================================*/
 
-/*FUNÇÕES PÚBLICAS*/
+/*FUNï¿½ï¿½ES Pï¿½BLICAS*/
 /*=======================================================================================*/
 
 /**********************************************************************
- * Função		:	TPM_Init
+ * Funï¿½ï¿½o		:	TPM_Init
  *
- * Descrição	:   Inicialização do driver do módulo TPM.
+ * Descriï¿½ï¿½o	:   Inicializaï¿½ï¿½o do driver do mï¿½dulo TPM.
  *
- * Entradas		:   *base    - registrador base do periférico TPM;
+ * Entradas		:   *base    - registrador base do perifï¿½rico TPM;
  *                  modulo   - valor de final de contagem;
- *                  prescale - tipo enumerado com um dos possíveis
+ *                  prescale - tipo enumerado com um dos possï¿½veis
  *                             valores de prescaler.
  *
- * Saídas 		:   Nenhuma.
+ * Saï¿½das 		:   Nenhuma.
  *
- * Comentários 	: 	Deve ser chamada após a função TPM_SetCounterClkSrc.
+ * Comentï¿½rios 	: 	Deve ser chamada apï¿½s a funï¿½ï¿½o TPM_SetCounterClkSrc.
  * ********************************************************************/
 void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale)
 {
@@ -38,13 +38,13 @@ void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale)
 
 	if (TPM0 == base)
 	{
-		SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK; /* Ativa o clock do módulo TPM0 */
+		SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK; /* Ativa o clock do mï¿½dulo TPM0 */
 	}
 	else
 	{
 		if (TPM1 == base)
 		{
-			SIM->SCGC6 |= SIM_SCGC6_TPM1_MASK; /* Ativa o clock do módulo TPM1 */
+			SIM->SCGC6 |= SIM_SCGC6_TPM1_MASK; /* Ativa o clock do mï¿½dulo TPM1 */
 		}
 	}
 
@@ -58,21 +58,21 @@ void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale)
 
 
 /**********************************************************************
- * Função		:	TPM_InitChannel
+ * Funï¿½ï¿½o		:	TPM_InitChannel
  *
- * Descrição	:   Inicializa um canal do módulo TPM.
+ * Descriï¿½ï¿½o	:   Inicializa um canal do mï¿½dulo TPM.
  *
- * Entradas		:   *base  - registrador base do periférico TPM;
- *                  chNum  - numéro do canal;
- *                  mode   - modo de operação do canal, sendo
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ *                  chNum  - numï¿½ro do canal;
+ *                  mode   - modo de operaï¿½ï¿½o do canal, sendo
  * 							 definidos pelo tipo TPM_chMode_t.
- * 					config - possíveisconfigurações de cada modo de
- * 							 operação do canal, sendo definidos pelo
+ * 					config - possï¿½veisconfiguraï¿½ï¿½es de cada modo de
+ * 							 operaï¿½ï¿½o do canal, sendo definidos pelo
  * 							 tipo TPM_chConfig_t.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfig_t config){
 
@@ -82,7 +82,7 @@ void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfi
 	switch(mode)
 	{
 		case(TPM_OUT_COMPARE_MODE):
-			base->SC &= ~TPM_SC_CPWMS_MASK; /*Não é Center PWM*/
+			base->SC &= ~TPM_SC_CPWMS_MASK; /*Nï¿½o ï¿½ Center PWM*/
 			if(config == TPM_OUT_TOGGLE_GONFIG)
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_MSA_MASK | TPM_CnSC_ELSA_MASK);
 			else if(config == TPM_OUT_CLEAR_GONFIG)
@@ -91,7 +91,7 @@ void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfi
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_MSA_MASK | (TPM_CnSC_ELSA_MASK) | TPM_CnSC_ELSA_MASK);
 			break;
 		case(TPM_IN_COMPARE_MODE):
-				base->SC &= ~TPM_SC_CPWMS_MASK; /*Não é Center PWM*/
+				base->SC &= ~TPM_SC_CPWMS_MASK; /*Nï¿½o ï¿½ Center PWM*/
 			if(config == TPM_IN_RISING_EDGE_CONFIG)
 				base->CONTROLS[chNum].CnSC = TPM_CnSC_ELSA_MASK;
 			else if(config == TPM_IN_FALLING_EDGE_CONFIG)
@@ -100,14 +100,14 @@ void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfi
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_ELSA_MASK | TPM_CnSC_ELSA_MASK);
 			break;
 		case(TPM_EDGE_PWM_MODE):
-		base->SC &= ~TPM_SC_CPWMS_MASK; /*Não é Center PWM*/
+		base->SC &= ~TPM_SC_CPWMS_MASK; /*Nï¿½o ï¿½ Center PWM*/
 			if(config == TPM_PWM_HIGH_TRUE_CONFIG)
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_MSB_MASK | TPM_CnSC_ELSB_MASK);
 			else
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_MSB_MASK | TPM_CnSC_ELSA_MASK);
 			break;
 		case(TPM_CENTER_PWM_MODE):
-				base->SC |= TPM_SC_CPWMS_MASK; /*É Center PWM*/
+				base->SC |= TPM_SC_CPWMS_MASK; /*ï¿½ Center PWM*/
 			if(config == TPM_PWM_HIGH_TRUE_CONFIG)
 				base->CONTROLS[chNum].CnSC = (TPM_CnSC_MSB_MASK | TPM_CnSC_ELSB_MASK);
 			else
@@ -118,9 +118,82 @@ void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfi
 	}
 }
 
-/*FIM: FUNÇÕES PÚBLICAS*/
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_SetFrequency
+ * Descriï¿½ï¿½o	:   Configura a frequï¿½ncia de operaï¿½ï¿½o do mï¿½dulo TPM.
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ * 				freq   - frequï¿½ncia de operaï¿½ï¿½o desejada.
+ * Saï¿½das		:   Nenhuma.
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+void TPM_SetFrequency(TPM_Type *base, uint32_t freq, uint8_t channel)
+{
+	assert(base);
+	assert(freq >= 0);
+
+	/*!< Recebe a frequencia do clock base do timer.*/
+	uint32_t clock_freq = TPM_GetClockFrequency();
+
+	/*!< Calcula o valor do valor maximo do timer.*/
+	uint32_t modulo = (uint32_t)(((clock_freq / (freq))) - 1);
+
+	/*!< Divide o modulo pelo prescaler enquanto o modulo Ã© maior que o valor maximo do timer */
+	uint8_t prescaler = 0;
+	while (modulo > 0xFFFF)
+	{
+		modulo = modulo >> 1;
+		prescaler++;
+		
+		/*!< Verifica se o prescaler tem mais de 3bits */
+		if (prescaler >> 4)
+		{
+			modulo = 0xFFFF;
+			prescaler = 0b111;
+			break;
+		}
+	}
+
+	uint16_t old_module = TPM_GetModulo(base);
+	uint16_t ch_value = TPM_GetChValue(base, 2);
+
+	/*!< Configura o modulo e o prescaler do timer */
+	TPM_SetModulo(base, modulo);
+	TPM_SetPrescaler(base, prescaler);
+
+	/*!< Atualiza o valor do pwm do canal 2 */
+	uint16_t new_ch_value = (uint16_t)((ch_value * modulo) / old_module);
+	TPM_SetChMatch(base, channel, new_ch_value);
+}
+
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_GetClockFrequency
+ * Descriï¿½ï¿½o	:   Retorna a frequencia utilizada para alimentar o timer.
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ * Saï¿½das		:   Nenhuma.
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+uint32_t TPM_GetClockFrequency()
+{
+	uint32_t value = ((SIM->SOPT2 & SIM_SOPT2_TPMSRC_MASK) >> SIM_SOPT2_TPMSRC_SHIFT);
+
+	switch(value)
+	{
+		case TPM_CNT_CLOCK_DISABLE:
+			return 0;
+		case TPM_CNT_CLOCK_FLL:
+			return MCG_FLL_CLK_FREQ;
+		case TPM_CNT_CLOCK_IRC:
+			return MCG_IRC_CLK_FREQ;
+		case TPM_CNT_CLOCK_OSC:
+			return OSC_ER_CLK_FREQ;
+		default:
+			return 0;
+	}
+}
+
+/*FIM: FUNï¿½ï¿½ES Pï¿½BLICAS*/
 /*=======================================================================================*/
 
 /***************************************************************************************
- * FIM: Módulo - tpm.c
+ * FIM: Mï¿½dulo - tpm.c
  ***************************************************************************************/

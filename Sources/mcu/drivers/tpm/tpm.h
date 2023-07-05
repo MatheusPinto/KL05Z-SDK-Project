@@ -1,21 +1,21 @@
 /***************************************************************************************
- * Módulo      : tpm.h
- * Revisão     : 1.1
+ * Mï¿½dulo      : tpm.h
+ * Revisï¿½o     : 1.1
  * Data        : 24/05/2023
- * Descrição   : Arquivo com implementações dos Módulos Timer/PWM (TPM) da Familia Kinetis KL05.
- * Comentários : Nenhum.
+ * Descriï¿½ï¿½o   : Arquivo com implementaï¿½ï¿½es dos Mï¿½dulos Timer/PWM (TPM) da Familia Kinetis KL05.
+ * Comentï¿½rios : Nenhum.
  * Autor(es)   : Matheus Leitzke Pinto
  ***************************************************************************************/
 
 #ifndef TPM_DRV_H_
 #define TPM_DRV_H_
 
-/*ARQUIVOS DE CABEÇALHO*/
+/*ARQUIVOS DE CABEï¿½ALHO*/
 /*=======================================================================================*/
 
 #include <mcu/common.h>
 
-/*FIM: ARQUIVOS DE CABEÇALHO*/
+/*FIM: ARQUIVOS DE CABEï¿½ALHO*/
 /*=======================================================================================*/
 
 #if defined(__cplusplus)
@@ -25,39 +25,39 @@ extern "C" {
 /*TIPOS ENUMERADOS*/
 /*=======================================================================================*/
 
-/*Possíveis modos de operação dos módulos TPM*/
+/*Possï¿½veis modos de operaï¿½ï¿½o dos mï¿½dulos TPM*/
 typedef enum{
-	TPM_OUT_COMPARE_MODE, 		/* Modo comparador de saída*/
+	TPM_OUT_COMPARE_MODE, 		/* Modo comparador de saï¿½da*/
 	TPM_IN_COMPARE_MODE	,		/* Modo captura de entrada*/
 	TPM_EDGE_PWM_MODE	,		/* Modo PWM alinhado a borda*/
 	TPM_CENTER_PWM_MODE			/* Modo PWM alinhado ao centro */
 }tpmChMode_t;
 
-/*Possíveis configurações do modos de operação dos módulos TPM*/
+/*Possï¿½veis configuraï¿½ï¿½es do modos de operaï¿½ï¿½o dos mï¿½dulos TPM*/
 typedef enum{
-	TPM_OUT_TOGGLE_GONFIG		, 	/*Modo comparação de saída: inverte lógica de saída*/
-	TPM_OUT_CLEAR_GONFIG		,  	/*Modo comparação de saída: limpa saída*/
-	TPM_OUT_SET_GONFIG			,  	/*Modo comparação de saída: seta saída*/
+	TPM_OUT_TOGGLE_GONFIG		, 	/*Modo comparaï¿½ï¿½o de saï¿½da: inverte lï¿½gica de saï¿½da*/
+	TPM_OUT_CLEAR_GONFIG		,  	/*Modo comparaï¿½ï¿½o de saï¿½da: limpa saï¿½da*/
+	TPM_OUT_SET_GONFIG			,  	/*Modo comparaï¿½ï¿½o de saï¿½da: seta saï¿½da*/
 	TPM_IN_RISING_EDGE_CONFIG	, 	/*Modo captura de entrada: borda de subida*/
 	TPM_IN_FALLING_EDGE_CONFIG	, 	/*Modo captura de entrada: borda de descida*/
 	TPM_IN_BOTH_EDGE_CONFIG		, 	/*Modo captura de entrada: borda de subida/descida*/
-	TPM_PWM_HIGH_TRUE_CONFIG	,	/*Modos PWM: Pulso é o nível*/
-	TPM_PWM_LOW_TRUE_CONFIG		,	/*Modos PWM: Pulso é o baixo*/
+	TPM_PWM_HIGH_TRUE_CONFIG	,	/*Modos PWM: Pulso ï¿½ o nï¿½vel*/
+	TPM_PWM_LOW_TRUE_CONFIG		,	/*Modos PWM: Pulso ï¿½ o baixo*/
 }tpmChConfig_t;
 
-/*Possíveis valores de divisões do prescaler dos módulos TPM*/
+/*Possï¿½veis valores de divisï¿½es do prescaler dos mï¿½dulos TPM*/
 typedef enum{
-	TPM_PRESCALER_DIV_1		=	0x0, 	/*Prescaler do módulo TPM divide por 0*/
-	TPM_PRESCALER_DIV_2		=	0x1,  	/*Prescaler do módulo TPM divide por 1*/
-	TPM_PRESCALER_DIV_4		=	0x2,  	/*Prescaler do módulo TPM divide por 2*/
-	TPM_PRESCALER_DIV_8		=	0x3,  	/*Prescaler do módulo TPM divide por 3*/
-	TPM_PRESCALER_DIV_16	=	0x4,  	/*Prescaler do módulo TPM divide por 4*/
-	TPM_PRESCALER_DIV_32	=	0x5,  	/*Prescaler do módulo TPM divide por 5*/
-	TPM_PRESCALER_DIV_64	=	0x6,  	/*Prescaler do módulo TPM divide por 6*/
-	TPM_PRESCALER_DIV_128	=	0x7,  	/*Prescaler do módulo TPM divide por 7*/
+	TPM_PRESCALER_DIV_1		=	0x0, 	/*Prescaler do mï¿½dulo TPM divide por 0*/
+	TPM_PRESCALER_DIV_2		=	0x1,  	/*Prescaler do mï¿½dulo TPM divide por 1*/
+	TPM_PRESCALER_DIV_4		=	0x2,  	/*Prescaler do mï¿½dulo TPM divide por 2*/
+	TPM_PRESCALER_DIV_8		=	0x3,  	/*Prescaler do mï¿½dulo TPM divide por 3*/
+	TPM_PRESCALER_DIV_16	=	0x4,  	/*Prescaler do mï¿½dulo TPM divide por 4*/
+	TPM_PRESCALER_DIV_32	=	0x5,  	/*Prescaler do mï¿½dulo TPM divide por 5*/
+	TPM_PRESCALER_DIV_64	=	0x6,  	/*Prescaler do mï¿½dulo TPM divide por 6*/
+	TPM_PRESCALER_DIV_128	=	0x7,  	/*Prescaler do mï¿½dulo TPM divide por 7*/
 }tpmPrescalerValues_t;
 
-/*Possíveis fontes de clock*/
+/*Possï¿½veis fontes de clock*/
 typedef enum{
 	TPM_CNT_CLOCK_DISABLE = 0U,
 	TPM_CNT_CLOCK_FLL = 1U,
@@ -69,7 +69,7 @@ typedef enum{
 /*=======================================================================================*/
 
 
-/*PROTÓTIPOS - FUNÇÕES INLINE*/
+/*PROTï¿½TIPOS - FUNï¿½ï¿½ES INLINE*/
 /*=======================================================================================*/
 
 static inline void TPM_InitCounter(TPM_Type *base);
@@ -84,64 +84,64 @@ static inline uint32_t TPM_GetIRQFlag(TPM_Type *base);
 static inline void TPM_ClearIRQFlag(TPM_Type *base);
 static inline void TPM_SetModulo(TPM_Type *base, uint16_t modulo);
 
-/*FIM: PROTÓTIPOS - FUNÇÕES INLINE*/
+/*FIM: PROTï¿½TIPOS - FUNï¿½ï¿½ES INLINE*/
 /*=======================================================================================*/
 
-/*PROTÓTIPOS - FUNÇÕES PÚBLICAS*/
+/*PROTï¿½TIPOS - FUNï¿½ï¿½ES Pï¿½BLICAS*/
 /*=======================================================================================*/
 
 /**********************************************************************
- * Função		:	TPM_Init
+ * Funï¿½ï¿½o		:	TPM_Init
  *
- * Descrição	:   Inicialização do driver do módulo TPM.
+ * Descriï¿½ï¿½o	:   Inicializaï¿½ï¿½o do driver do mï¿½dulo TPM.
  *
- * Entradas		:   *base    - registrador base do periférico TPM;
+ * Entradas		:   *base    - registrador base do perifï¿½rico TPM;
  *                  modulo   - valor de final de contagem;
- *                  prescale - tipo enumerado com um dos possíveis
+ *                  prescale - tipo enumerado com um dos possï¿½veis
  *                             valores de prescaler.
  *
- * Saídas 		:   Nenhuma.
+ * Saï¿½das 		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 void TPM_Init(TPM_Type *base, uint16_t modulo, tpmPrescalerValues_t prescale);
 
 /**********************************************************************
- * Função		:	TPM_InitChannel
+ * Funï¿½ï¿½o		:	TPM_InitChannel
  *
- * Descrição	:   Inicializa um canal do módulo TPM.
+ * Descriï¿½ï¿½o	:   Inicializa um canal do mï¿½dulo TPM.
  *
- * Entradas		:   *base  - registrador base do periférico TPM;
- *                  chNum  - numéro do canal;
- *                  mode   - modo de operação do canal, sendo
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ *                  chNum  - numï¿½ro do canal;
+ *                  mode   - modo de operaï¿½ï¿½o do canal, sendo
  * 							 definidos pelo tipo TPM_chMode_t.
- * 					config - possíveisconfigurações de cada modo de
- * 							 operação do canal, sendo definidos pelo
+ * 					config - possï¿½veisconfiguraï¿½ï¿½es de cada modo de
+ * 							 operaï¿½ï¿½o do canal, sendo definidos pelo
  * 							 tipo TPM_chConfig_t.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 void TPM_InitChannel(TPM_Type *base, uint8_t chNum, tpmChMode_t mode, tpmChConfig_t config);
 
 
-/*FIM: PROTÓTIPOS - FUNÇÕES PÚBLICAS*/
+/*FIM: PROTï¿½TIPOS - FUNï¿½ï¿½ES Pï¿½BLICAS*/
 /*=======================================================================================*/
 
-/*FUNÇÕES INLINE*/
+/*FUNï¿½ï¿½ES INLINE*/
 /*=======================================================================================*/
 
 /**********************************************************************
- * Função		:	TPM_InitCounter
+ * Funï¿½ï¿½o		:	TPM_InitCounter
  *
- * Descrição	:   Ativa clock do contador para iniciar a contagem.
+ * Descriï¿½ï¿½o	:   Ativa clock do contador para iniciar a contagem.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_InitCounter(TPM_Type *base)
 {
@@ -150,34 +150,34 @@ static inline void TPM_InitCounter(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_StopCounter
+ * Funï¿½ï¿½o		:	TPM_StopCounter
  *
- * Descrição	:   Desativa clock do contador para parar a contagem.
+ * Descriï¿½ï¿½o	:   Desativa clock do contador para parar a contagem.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_StopCounter(TPM_Type *base)
 {
 	SYSTEM_ASSERT(base);
-	base->SC &= ~(TPM_SC_CMOD(0x1U));
+	base->SC &= ~TPM_SC_CMOD_MASK;
 }
 
 /**********************************************************************
- * Função		:	TPM_SetCounterClkSrc
+ * Funï¿½ï¿½o		:	TPM_SetCounterClkSrc
  *
- * Descrição	:   Define a fonte de clock utilizada pelo contador.
+ * Descriï¿½ï¿½o	:   Define a fonte de clock utilizada pelo contador.
  *
- * Entradas		:   *base - registrador base do periférico TPM;
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM;
  *                  src   - tipo enumerado que define a fonte de clock.
  *
- * Saídas 		:   STATUS_SUCCESS, se configuração ocorreu corretamente;
- *                  STATUS_FAIL, caso contrário.
+ * Saï¿½das 		:   STATUS_SUCCESS, se configuraï¿½ï¿½o ocorreu corretamente;
+ *                  STATUS_FAIL, caso contrï¿½rio.
  *
- * Comentários 	: 	Deve ser chamada antes da função TPM_Init.
+ * Comentï¿½rios 	: 	Deve ser chamada antes da funï¿½ï¿½o TPM_Init.
  * ********************************************************************/
 static inline void TPM_SetCounterClkSrc(TPM_Type *base, tpmClkSrc_t src)
 {
@@ -188,16 +188,16 @@ static inline void TPM_SetCounterClkSrc(TPM_Type *base, tpmClkSrc_t src)
 }
 
 /**********************************************************************
- * Função		:	TPM_SetStopOnOverflow
+ * Funï¿½ï¿½o		:	TPM_SetStopOnOverflow
  *
- * Descrição	:   Define o contador para parar a contagem quando ocorrer
+ * Descriï¿½ï¿½o	:   Define o contador para parar a contagem quando ocorrer
  *                  estouro de contagem.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_SetStopOnOverflow(TPM_Type *base)
 {
@@ -206,16 +206,16 @@ static inline void TPM_SetStopOnOverflow(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_SetContinueOnOverflow
+ * Funï¿½ï¿½o		:	TPM_SetContinueOnOverflow
  *
- * Descrição	:   Define o contador não parar a contagem quando ocorrer
+ * Descriï¿½ï¿½o	:   Define o contador nï¿½o parar a contagem quando ocorrer
  *                  estouro de contagem.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_SetContinueOnOverflow(TPM_Type *base)
 {
@@ -224,18 +224,18 @@ static inline void TPM_SetContinueOnOverflow(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_GetChValue
+ * Funï¿½ï¿½o		:	TPM_GetChValue
  *
- * Descrição	:   Retorna o valor do registrador contador no modo "Captura
- * 					de Entrada" ou o valor de "match" no modo "Comparação de Saída"
- * 					do canal 0 módulo TPM.
+ * Descriï¿½ï¿½o	:   Retorna o valor do registrador contador no modo "Captura
+ * 					de Entrada" ou o valor de "match" no modo "Comparaï¿½ï¿½o de Saï¿½da"
+ * 					do canal 0 mï¿½dulo TPM.
  *
- * Entradas		:   *base - registrador base do periférico TPM;
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM;
  *                  channel - valor do canal do TPM.
  *
- * Saídas		:   modulo: valor de 1 à 65535.
+ * Saï¿½das		:   modulo: valor de 1 ï¿½ 65535.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline uint16_t TPM_GetChValue(TPM_Type *base, uint8_t channel)
 {
@@ -246,17 +246,17 @@ static inline uint16_t TPM_GetChValue(TPM_Type *base, uint8_t channel)
 
 
 /**********************************************************************
- * Função		:	TPM_SetChMatch
+ * Funï¿½ï¿½o		:	TPM_SetChMatch
  *
- * Descrição	:    Define valor de "match" em canal do módulo TPM0.
+ * Descriï¿½ï¿½o	:    Define valor de "match" em canal do mï¿½dulo TPM0.
  *
- * Entradas		:   *base - registrador base do periférico TPM;
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM;
  *                  channel - valor do canal do TPM;
- *                  match: valor de 2 à 65535.
+ *                  match: valor de 2 ï¿½ 65535.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_SetChMatch(TPM_Type *base, uint8_t channel, uint16_t match)
 {
@@ -266,15 +266,15 @@ static inline void TPM_SetChMatch(TPM_Type *base, uint8_t channel, uint16_t matc
 }
 
 /**********************************************************************
- * Função		:	TPM_EnableIRQ
+ * Funï¿½ï¿½o		:	TPM_EnableIRQ
  *
- * Descrição	:   Habilita a geração de interrupção pelo módulo TPM.
+ * Descriï¿½ï¿½o	:   Habilita a geraï¿½ï¿½o de interrupï¿½ï¿½o pelo mï¿½dulo TPM.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_EnableIRQ(TPM_Type *base)
 {
@@ -283,17 +283,17 @@ static inline void TPM_EnableIRQ(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_GetIRQFlag
+ * Funï¿½ï¿½o		:	TPM_GetIRQFlag
  *
- * Descrição	:   Retorna o valor da flag de interrupção gerada
- * 					pelo módulo TPM.
+ * Descriï¿½ï¿½o	:   Retorna o valor da flag de interrupï¿½ï¿½o gerada
+ * 					pelo mï¿½dulo TPM.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   0	,  se não houve interrupção;
- * 					!0	,  se houve interrupção.
+ * Saï¿½das		:   0	,  se nï¿½o houve interrupï¿½ï¿½o;
+ * 					!0	,  se houve interrupï¿½ï¿½o.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline uint32_t TPM_GetIRQFlag(TPM_Type *base)
 {
@@ -302,15 +302,15 @@ static inline uint32_t TPM_GetIRQFlag(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_ClearIRQFlag
+ * Funï¿½ï¿½o		:	TPM_ClearIRQFlag
  *
- * Descrição	:   Limpa a flag de interrupção gerada pelo módulo TPM.
+ * Descriï¿½ï¿½o	:   Limpa a flag de interrupï¿½ï¿½o gerada pelo mï¿½dulo TPM.
  *
- * Entradas		:   *base - registrador base do periférico TPM.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_ClearIRQFlag(TPM_Type *base)
 {
@@ -319,16 +319,16 @@ static inline void TPM_ClearIRQFlag(TPM_Type *base)
 }
 
 /**********************************************************************
- * Função		:	TPM_SetModulo
+ * Funï¿½ï¿½o		:	TPM_SetModulo
  *
- * Descrição	:   Define valor de fim de contagem do módulo do TPM.
+ * Descriï¿½ï¿½o	:   Define valor de fim de contagem do mï¿½dulo do TPM.
  *
- * Entradas		:   *base - registrador base do periférico TPM;
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM;
  * 					modulo - valor de fim de contagem.
  *
- * Saídas		:   Nenhuma.
+ * Saï¿½das		:   Nenhuma.
  *
- * Comentários 	: 	Nenhum.
+ * Comentï¿½rios 	: 	Nenhum.
  * ********************************************************************/
 static inline void TPM_SetModulo(TPM_Type *base, uint16_t modulo)
 {
@@ -337,7 +337,71 @@ static inline void TPM_SetModulo(TPM_Type *base, uint16_t modulo)
 	base->MOD = modulo;
 }
 
-/*FIM: FUNÇÕES INLINE*/
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_GetModulo
+ * 
+ * Descriï¿½ï¿½o	:   Retorna o valor de final de contagem
+ * 					do mï¿½dulo TPM0.
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
+ * 
+ * Saï¿½das		:   Valor de final de contagem 16bits
+ * 
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+static inline uint16_t TPM_GetModulo(TPM_Type *base)
+{
+	assert(base);
+	return (uint16_t)base->MOD;
+}
+
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_SetFrequency
+ * Descriï¿½ï¿½o	:   Configura a frequï¿½ncia de operaï¿½ï¿½o do mï¿½dulo TPM.
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ * 				freq   - frequï¿½ncia de operaï¿½ï¿½o desejada.
+ * Saï¿½das		:   Nenhuma.
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+void TPM_SetFrequency(TPM_Type *base, uint32_t freq, uint8_t channel);
+
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_GetClockFrequency
+ * Descriï¿½ï¿½o	:   Retorna a frequencia utilizada para alimentar o timer.
+ * Entradas		:   *base  - registrador base do perifï¿½rico TPM;
+ * Saï¿½das		:   Nenhuma.
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+uint32_t TPM_GetClockFrequency();
+
+/**********************************************************************
+ * Funï¿½ï¿½o		:	TPM_SetPrescaler
+ * 
+ * Descriï¿½ï¿½o	:   Define o valor do prescaler do mï¿½dulo TPM0.
+ * 
+ * Entradas		:   *base - registrador base do perifï¿½rico TPM.
+ * 					prescaler do tipo tpmPrescalerValues_t 
+ * Saï¿½das		:   Nenhuma.
+ * 
+ * Comentï¿½rios 	: 	Nenhum.
+ * ********************************************************************/
+static inline void TPM_SetPrescaler(TPM_Type *base, tpmPrescalerValues_t prescaler)
+{
+	assert(base);
+
+	/** Para o contador porque PS Ã© somente leitura enquanto counter esta ligado */
+	TPM_StopCounter(base);
+
+	/*<! Limpa os bits de prescaler */
+	base->SC &= ~TPM_SC_PS_MASK;
+	/*<! Define o prescaler */
+    base->SC |= TPM_SC_PS(prescaler);
+	/*<! Limpa o contador */
+	base->CNT = 0x00U;
+
+	TPM_InitCounter(base);
+}
+
+/*FIM: FUNï¿½ï¿½ES INLINE*/
 /*=======================================================================================*/
 
 #if defined(__cplusplus)
@@ -347,6 +411,6 @@ static inline void TPM_SetModulo(TPM_Type *base, uint16_t modulo)
 #endif /* TPM_DRV_H_ */
 
 /***************************************************************************************
- * FIM: Módulo - tpm.h
+ * FIM: Mï¿½dulo - tpm.h
  ***************************************************************************************/
 
