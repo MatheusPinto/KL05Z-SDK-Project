@@ -151,7 +151,7 @@ synthAdapter_t SYNTH_CreateGPIOAdapter(TPM_Type *base, uint8_t channel)
 	TPM_InitChannel(TPM0, channel, TPM_EDGE_PWM_MODE, TPM_PWM_HIGH_TRUE_CONFIG);
 
 	/* Configures the PWM */
-	TPM_SetChMatch(TPM0, channel, 32767);
+	TPM_SetChMatch(TPM0, channel, 32767U);
 
 	/** Init timer */
 	TPM_InitCounter(TPM0);

@@ -502,7 +502,7 @@ void MUSIC_GEN_GenerateScale(musicGenHandle_t *handle)
 
 	for (uint8_t i = 0; i < last_note; ++i)
 	{
-		uint8_t index = start + steps[i % 7] + ((rand() % 40) / 7) * 12;
+		uint8_t index = start + steps[i % 7] + (rand() % 75) * 12;
 
 		if (index > sizeof(notes_frequency) / sizeof(notes_frequency[0]))
 		{

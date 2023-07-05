@@ -154,7 +154,7 @@ void TPM_SetFrequency(TPM_Type *base, uint32_t freq, uint8_t channel)
 	}
 
 	uint16_t old_module = TPM_GetModulo(base);
-	uint16_t ch_value = TPM_GetChValue(base, 2);
+	uint16_t ch_value = TPM_GetChValue(base, channel);
 
 	/*!< Configura o modulo e o prescaler do timer */
 	TPM_SetModulo(base, modulo);
