@@ -441,8 +441,8 @@ void MUSIC_GEN_Poll(musicGenHandle_t *handle, uint16_t dt_ms)
 		currentNote = &notes[handle->config->note_index];
 
 		/** Play new note */
-		SYNTH_SetFrequency(handle->synthHandle, (uint16_t)(currentNote->frequency / 10));
 		SYNTH_SetVolume(handle->synthHandle, currentNote->volume);
+		SYNTH_SetFrequency(handle->synthHandle, (uint16_t)(currentNote->frequency / 10));
 	}
 }
 

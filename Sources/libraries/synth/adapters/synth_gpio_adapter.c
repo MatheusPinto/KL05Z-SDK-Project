@@ -213,7 +213,7 @@ void SYNTH_setDuty(synthHandle_t* handle, uint8_t duty)
 
 	uint16_t module = TPM_GetModulo(adapter->base);
 
-	uint16_t new_match = (uint16_t)((module * duty) / 255);
+	uint16_t new_match = (uint16_t)((module * (uint8_t)duty) / 255U);
 
 	TPM_SetChMatch(adapter->base, adapter->channel, new_match);
 }
