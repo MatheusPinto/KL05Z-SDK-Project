@@ -209,9 +209,13 @@ void SYNTH_setDuty(synthHandle_t* handle, uint8_t duty)
 {
 	synthGPIOHardwareAdapter_t* adapter = (synthGPIOHardwareAdapter_t*)(handle->config->adapter);
 
+	adapter->duty = duty;
+
 	uint16_t module = TPM_GetModulo(adapter->base);
 
-	TPM_SetChMatch(adapter->base, adapter->channel, (uint16_t)((module * duty) / 255));
+	uint16_t new_match = (uint16_t)((module * duty) / 255);
+
+	TPM_SetChMatch(adapter->base, adapter->channel, new_match);
 }
 
 /**

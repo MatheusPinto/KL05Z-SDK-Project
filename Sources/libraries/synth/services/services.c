@@ -60,12 +60,14 @@ void SYNTH_SetVolume(synthHandle_t *handle, uint8_t volume)
 
 	if (volume > 100)
 	{
-		volume = 100;
+		volume = (uint8_t)100U;
 	}
 	if (volume < 0)
 	{
-		volume = 0;
+		volume = (uint8_t)0U;
 	}
 
-	adapter->setDuty(handle, volume * 126 / 100);
+	uint8_t duty = (uint8_t)(volume * 126 / 100);
+
+	adapter->setDuty(handle, duty);
 }
