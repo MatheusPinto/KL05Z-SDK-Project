@@ -73,7 +73,7 @@
  * @return The string length.
  *
  */
-#define StrLen(str) strlen(str)
+#define Util_StrLen(str) strlen(str)
 
 
  /**
@@ -88,7 +88,7 @@
  *           returns a number less than zero.
  *
  */
-#define StrCmp(str1, str2) strcmp(str1, str2)
+#define Util_StrCmp(str1, str2) strcmp(str1, str2)
 
 
  /**
@@ -104,7 +104,7 @@
  *           returns a number less than zero.
  *
  */
-#define StrNCmp(str1, str2, len) strncmp(str1, str2, len)
+#define Util_StrNCmp(str1, str2, len) strncmp(str1, str2, len)
 
 
 #ifdef STR_COPY_FUNC
@@ -201,7 +201,7 @@ int16_t Util_StrFind(uint8_t *str, uint8_t *subStr);
   * @return The string length.
   *
   */
-int Util_ItoA(int32_t num, uint8_t* str, uint8_t base);
+int Util_IntToStr( int32_t num, uint8_t *str, uint8_t base );
 #endif
 
 #ifdef ATOI_FUNC
@@ -218,7 +218,7 @@ int Util_ItoA(int32_t num, uint8_t* str, uint8_t base);
   *         \a false - otherwise.
   *
   */
-bool Util_AtoI(const unsigned char** str, int32_t* res);
+bool Util_StrToInt( const unsigned char **str, int32_t *res );
 #endif
 
 #if defined(ITOA_FUNC) && defined(FTOA_FUNC)
@@ -232,7 +232,7 @@ bool Util_AtoI(const unsigned char** str, int32_t* res);
  * @return The string length.
  *
  */
-int Util_FtoA(float n, uint8_t *res, int afterPoint);
+int Util_FloatToStr( float n, uint8_t *res, int afterPoint );
 #endif
 
 #ifdef ATOF_FUNC
@@ -249,7 +249,7 @@ int Util_FtoA(float n, uint8_t *res, int afterPoint);
  *         \a false - otherwise.
  *
  */
-bool Util_AtoF(const unsigned char** str, float* res);
+bool Util_StrToFloat( const unsigned char **str, float *res );
 #endif
 
 /*! @}*/

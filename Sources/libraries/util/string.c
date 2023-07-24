@@ -24,7 +24,7 @@
  */
 
 #include <math.h>
-#include <system/assert.h>
+#include "system/assert.h"
 #include "string.h"
 #include "swap.h"
 
@@ -49,7 +49,8 @@ void Util_StrCopy(uint8_t *dst, size_t dstSize, const char *src)
 
 #ifdef STR_CAT_FUNC
 // Credits: Erich Styger component from Processor Expert https://mcuoneclipse.com/author/mcuoneclipse/
-void Util_StrCat(uint8_t *dst, size_t dstSize, const unsigned char *src) {
+void Util_StrCat( uint8_t *dst, size_t dstSize, const unsigned char *src )
+{
 	dstSize--; /* for zero byte */
 	/* point to the end of the source */
 	while (dstSize > 0 && *dst != '\0') {
@@ -68,7 +69,8 @@ void Util_StrCat(uint8_t *dst, size_t dstSize, const unsigned char *src) {
 
 #ifdef CHAR_CAT_FUNC
 // Credits: Erich Styger component from Processor Expert https://mcuoneclipse.com/author/mcuoneclipse/
-void Util_CharCat(unsigned char *dst, size_t dstSize, uint8_t ch) {
+void Util_CharCat( unsigned char *dst, size_t dstSize, uint8_t ch )
+{
 	dstSize--; /* for zero byte */
 	/* point to the end of the source */
 	while (dstSize > 0 && *dst != '\0') {
@@ -85,7 +87,8 @@ void Util_CharCat(unsigned char *dst, size_t dstSize, uint8_t ch) {
 #endif /* CHAR_CAT_FUNC */
 
 #ifdef REVERSE_FUNC
-void Util_ReverseStr(uint8_t *str, size_t length) {
+void Util_ReverseStr( uint8_t *str, size_t length )
+{
 	int start = 0;
 	int end = length - 1;
 	while (start < end) {
@@ -98,12 +101,14 @@ void Util_ReverseStr(uint8_t *str, size_t length) {
 
 #ifdef STR_FIND_FUNC
 // Credits: Erich Styger component from Processor Expert https://mcuoneclipse.com/author/mcuoneclipse/
-int16_t Util_StrFind(uint8_t *str, uint8_t *subStr) {
+int16_t Util_StrFind( uint8_t *str, uint8_t *subStr )
+{
 	int16_t i, len;
 
-	len = (int16_t) StrLen((char*) subStr);
-	for (i = 0; *str != '\0'; i++, str++) {
-		if (StrNCmp((char*)str, (char*)subStr, len) == 0) {
+	len = (int16_t) Util_StrLen((char*) subStr);
+	for (i = 0; *str != '\0'; i++, str++)
+	{
+		if (Util_StrNCmp((char*)str, (char*)subStr, len) == 0) {
 			return i; /* found */
 		}
 	}
@@ -112,7 +117,8 @@ int16_t Util_StrFind(uint8_t *str, uint8_t *subStr) {
 #endif /* STR_FIND_FUNC */
 
 #ifdef ITOA_FUNC
-int Util_ItoA(int32_t num, uint8_t* str, uint8_t base) {
+int Util_IntToStr( int32_t num, uint8_t *str, uint8_t base )
+{
 	int i = 0;
 
 	ASSERT(str);
@@ -136,7 +142,7 @@ int Util_ItoA(int32_t num, uint8_t* str, uint8_t base) {
 	// Process individual digits
 	while (num != 0) {
 		int rem = num % base;
-		str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+		str[i++] = (rem > 9) ? (rem - 10) + 'A' : rem + '0';
 		num = num / base;
 	}
 
@@ -166,7 +172,8 @@ int Util_ItoA(int32_t num, uint8_t* str, uint8_t base) {
  / * Redistributions of source code must retain the above copyright notice.
  /
  /-------------------------------------------------------------------------*/
-bool Util_AtoI(const unsigned char **str, int32_t *res) {
+bool Util_StrToInt( const unsigned char **str, int32_t *res )
+{
 	/* 123 -5   0x3ff 0b1111 0377 3.25  w "
 	 ^                               1st call returns 123 and next ptr
 	 ^                            2nd call returns -5 and next ptr
@@ -241,7 +248,8 @@ bool Util_AtoI(const unsigned char **str, int32_t *res) {
 #if defined(ITOA_FUNC) && defined(FTOA_FUNC)
 
 // Credits: Geeks for geeks https://www.geeksforgeeks.org/convert-floating-point-number-string/
-int Util_FtoA(float n, uint8_t *res, int afterpoint) {
+int Util_FloatToStr( float n, uint8_t *res, int afterpoint )
+{
 	// Extract integer part
 	int ipart = (int) n;
 
@@ -249,7 +257,7 @@ int Util_FtoA(float n, uint8_t *res, int afterpoint) {
 	float fpart = n - (float) ipart;
 
 	// convert integer part to string
-	int i = Util_ItoA(ipart, res, 10);
+	int i = Util_IntToStr(ipart, res, 10);
 
 	// check for display option after point
 	if (afterpoint != 0) {
@@ -263,7 +271,7 @@ int Util_FtoA(float n, uint8_t *res, int afterpoint) {
 			fpart *= -1;
 		}
 
-		i += Util_ItoA((int) fpart, res + i + 1, 10);
+		i += Util_IntToStr((int) fpart, res + i + 1, 10);
 	}
 
 	return i;
@@ -271,7 +279,7 @@ int Util_FtoA(float n, uint8_t *res, int afterpoint) {
 #endif /* defined(ITOA) && defined(FTOA) */
 
 #ifdef ATOF_FUNC
-bool Util_AtoF(const unsigned char** str, float* res)
+bool Util_StrToFloat( const unsigned char **str, float *res )
 {
 	float rez = 0, fact = 1;
 	uint8_t c;
