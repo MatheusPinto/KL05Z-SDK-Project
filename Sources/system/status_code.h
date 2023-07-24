@@ -35,7 +35,10 @@ enum
 	SYSTEM_STATUS_INVALID_ARGUMENT = 4,   /*!< Generic status for invalid argument check. */
 	SYSTEM_STATUS_TIMEOUT = 5,   /*!< Generic status for timeout. */
 	SYSTEM_STATUS_NO_TRANSFER_IN_PROGRESS = 6,   /*!< Generic status for no transfer in progress. */
-	SYSTEM_STATUS_BUSY = 7   /*!< Generic status for module is busy. */
+	SYSTEM_STATUS_BUSY = 7,   /*!< Generic status for module is busy. */
+	SYSTEM_STATUS_INVALID_ADDRESS = 8,   /*!< Generic status for invalid address. */
+	SYSTEM_STATUS_INVALID_REGISTER = 9,   /*!< Generic status for invalid register. */
+	SYSTEM_STATUS_TRANSFER_FAIL = 10,   /*!< Generic status for transfer failure. */
 };
 
 #endif /* SYSTEM_STATUS_CODE_H_ */
