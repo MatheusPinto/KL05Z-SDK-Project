@@ -35,6 +35,8 @@
 #define SYSTEM_ASSERT(n) (void)0
 #else
 #ifdef __FREERTOS_H
+#include <FreeRTOS.h>
+#include <task.h>
 #define SYSTEM_ASSERT(n) configASSERT(n)
 #else
 #define SYSTEM_ASSERT(n) \

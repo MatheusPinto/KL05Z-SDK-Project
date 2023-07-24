@@ -94,7 +94,7 @@
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
 		{																								\
-			OS_App_StackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
+			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
 		}																								\
 	}
 
@@ -110,7 +110,7 @@
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack >= pxCurrentTCB->pxEndOfStack )									\
 		{																								\
-			OS_App_StackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
+			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
 		}																								\
 	}
 
@@ -129,7 +129,7 @@
 			( pulStack[ 2 ] != ulCheckValue ) ||												\
 			( pulStack[ 3 ] != ulCheckValue ) )												\
 		{																								\
-			OS_App_StackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
+			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
 		}																								\
 	}
 
@@ -153,7 +153,7 @@
 		/* Has the extremity of the task stack ever been written over? */																\
 		if( memcmp( ( void * ) pcEndOfStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )					\
 		{																																\
-			OS_App_StackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );									\
+			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );									\
 		}																																\
 	}
 

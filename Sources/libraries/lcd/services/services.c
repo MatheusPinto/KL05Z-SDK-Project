@@ -127,7 +127,7 @@ static const uint8_t _bigNumCommands[10][4] =
  */
 void LCD_Clear(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	// Clear display, set cursor position to zero
@@ -146,7 +146,7 @@ void LCD_Clear(lcdHandle_t *handle)
  */
 void LCD_Home(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	// Set cursor position to zero
@@ -167,7 +167,7 @@ void LCD_Home(lcdHandle_t *handle)
  */
 void LCD_SetCursor(lcdHandle_t *handle, uint8_t col, uint8_t row)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -197,7 +197,7 @@ void LCD_SetCursor(lcdHandle_t *handle, uint8_t col, uint8_t row)
  */
 void LCD_NoDisplay(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -214,7 +214,7 @@ void LCD_NoDisplay(lcdHandle_t *handle)
  */
 void LCD_Display(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -231,7 +231,7 @@ void LCD_Display(lcdHandle_t *handle)
  */
 void LCD_NoCursor(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -248,7 +248,7 @@ void LCD_NoCursor(lcdHandle_t *handle)
  */
 void LCD_Cursor(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -265,7 +265,7 @@ void LCD_Cursor(lcdHandle_t *handle)
  */
 void LCD_NoBlink(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -282,7 +282,7 @@ void LCD_NoBlink(lcdHandle_t *handle)
  */
 void LCD_Blink(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -300,7 +300,7 @@ void LCD_Blink(lcdHandle_t *handle)
  */
 void LCD_ScrollDisplayLeft(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	LCD_Command(handle, LCD_CURSOR_SHIFT | LCD_DISPLAY_MOVE | LCD_MOVE_LEFT);
@@ -316,7 +316,7 @@ void LCD_ScrollDisplayLeft(lcdHandle_t *handle)
  */
 void LCD_ScrollDisplayRight(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	LCD_Command(handle, LCD_CURSOR_SHIFT | LCD_DISPLAY_MOVE | LCD_MOVE_RIGHT);
@@ -331,7 +331,7 @@ void LCD_ScrollDisplayRight(lcdHandle_t *handle)
  */
 void LCD_LeftToRight(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -348,7 +348,7 @@ void LCD_LeftToRight(lcdHandle_t *handle)
  */
 void LCD_RightToLeft(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -365,7 +365,7 @@ void LCD_RightToLeft(lcdHandle_t *handle)
  */
 void LCD_Autoscroll(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -382,7 +382,7 @@ void LCD_Autoscroll(lcdHandle_t *handle)
  */
 void LCD_NoAutoscroll(lcdHandle_t *handle)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	lcdHandle_t* lcdHandle = (lcdHandle_t*)handle;
@@ -402,7 +402,7 @@ void LCD_NoAutoscroll(lcdHandle_t *handle)
  */
 void LCD_CreateChar(lcdHandle_t *handle, uint8_t location, uint8_t charmap[])
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	// We only have 8 locations 0-7
@@ -424,7 +424,7 @@ void LCD_CreateChar(lcdHandle_t *handle, uint8_t location, uint8_t charmap[])
  */
 void LCD_WriteString(lcdHandle_t *handle, char *str)
 {
-	EmbUtil_Assert(handle);
+	SYSTEM_ASSERT(handle);
 	LcdEnterMutex(handle);
 
 	while (*str != '\0')

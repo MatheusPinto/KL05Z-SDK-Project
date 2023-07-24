@@ -8,7 +8,7 @@
  * associated with the parsed nodes.
  */
 
-#include "parser.h"
+#include "libraries/parser/parser.h"
 #include <string.h>
 
 /**

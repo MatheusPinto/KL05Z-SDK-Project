@@ -7,7 +7,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-void OS_App_StackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
     // Custom behavior when a stack overflow occurs
     // You can log an error, take corrective actions, etc.

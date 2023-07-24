@@ -76,7 +76,9 @@
 #include "task.h"
 #include "tickless_generic.h"
 
-extern uint32_t SystemCoreClock; /* in Kinetis SDK, this contains the system core clock speed */
+#ifdef SEGGER_SYSVIEW_TOOL
+unsigned int SEGGER_SYSVIEW_TickCnt;
+#endif
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
@@ -103,9 +105,9 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 /*
  * Exception handlers.
  */
-void Kernel_Port_PendSVHandler( void ) __attribute__ (( naked ));
-void Kernel_Port_SysTickHandler( void );
-void Kernel_Port_SVCHandler( void );
+void xPortPendSVHandler( void ) __attribute__ (( naked ));
+void xPortSysTickHandler( void );
+void vPortSVCHandler( void );
 
 /*
  * Start first task is a separate function so it can be tested in isolation.
@@ -122,7 +124,7 @@ static void prvTaskExitError( void );
 /*
  * See header file for description.
  */
-StackType_t *OS_Port_InitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
@@ -154,7 +156,7 @@ static void prvTaskExitError( void )
 }
 /*-----------------------------------------------------------*/
 
-void Kernel_Port_SVCHandler( void )
+void vPortSVCHandler( void )
 {
 	/* This function is no longer used, but retained for backward
 	compatibility. */
@@ -191,7 +193,7 @@ void vPortStartFirstTask( void )
 /*
  * See header file for description.
  */
-BaseType_t OS_Port_StartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Make PendSV, CallSV and SysTick the same priroity as the kernel. */
 	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
@@ -218,7 +220,7 @@ BaseType_t OS_Port_StartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_EndScheduler( void )
+void vPortEndScheduler( void )
 {
 	/* Not implemented in ports where there is nothing to return to.
 	Artificially force an assert. */
@@ -226,7 +228,7 @@ void OS_Port_EndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_Yield( void )
+void vPortYield( void )
 {
 	/* Set a PendSV to request a context switch. */
 	*( portNVIC_INT_CTRL ) = portNVIC_PENDSVSET;
@@ -238,7 +240,7 @@ void OS_Port_Yield( void )
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_EnterCritical( void )
+void vPortEnterCritical( void )
 {
     portDISABLE_INTERRUPTS();
     uxCriticalNesting++;
@@ -247,7 +249,7 @@ void OS_Port_EnterCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_ExitCritical( void )
+void vPortExitCritical( void )
 {
 	configASSERT( uxCriticalNesting );
     uxCriticalNesting--;
@@ -258,7 +260,7 @@ void OS_Port_ExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-uint32_t OS_SetInterruptMaskFromISR( void )
+uint32_t ulSetInterruptMaskFromISR( void )
 {
 	__asm volatile(
 					" mrs r0, PRIMASK	\n"
@@ -271,7 +273,7 @@ uint32_t OS_SetInterruptMaskFromISR( void )
 }
 /*-----------------------------------------------------------*/
 
-void OS_ClearInterruptMaskFromISR( uint32_t ulMask )
+void vClearInterruptMaskFromISR( uint32_t ulMask )
 {
 	__asm volatile(
 					" msr PRIMASK, r0	\n"
@@ -283,7 +285,7 @@ void OS_ClearInterruptMaskFromISR( uint32_t ulMask )
 }
 /*-----------------------------------------------------------*/
 
-void Kernel_Port_PendSVHandler( void )
+void xPortPendSVHandler( void )
 {
 	/* This is a naked function. */
 
@@ -305,7 +307,7 @@ void Kernel_Port_PendSVHandler( void )
 	"										\n"
 	"	push {r3, r14}						\n"
 	"	cpsid i								\n"
-	"	bl Kernel_Task_SwitchContext		\n"
+	"	bl vTaskSwitchContext				\n"
 	"	cpsie i								\n"
 	"	pop {r2, r3}						\n" /* lr goes in r3. r2 now holds tcb pointer. */
 	"										\n"
@@ -331,14 +333,17 @@ void Kernel_Port_PendSVHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-void Kernel_Port_SysTickHandler( void )
+void xPortSysTickHandler( void )
 {
-uint32_t ulPreviousMask;
+	uint32_t ulPreviousMask;
 
-	ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
+#ifdef SEGGER_SYSVIEW_TOOL
+	++SEGGER_SYSVIEW_TickCnt;
+#endif
+    ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the RTOS tick. */
-		if( Kernel_Task_IncrementTick() != pdFALSE )
+		if( xTaskIncrementTick() != pdFALSE )
 		{
 			/* Pend a context switch. */
 			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;

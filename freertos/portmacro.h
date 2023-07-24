@@ -119,27 +119,27 @@ typedef unsigned long UBaseType_t;
 
 
 /* Scheduler utilities. */
-extern void OS_Port_Yield( void );
+extern void vPortYield( void );
 #define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
-#define portYIELD()					OS_Port_Yield()
+#define portYIELD()					vPortYield()
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
 
 /* Critical section management. */
-extern void OS_Port_EnterCritical( void );
-extern void OS_Port_ExitCritical( void );
-extern uint32_t OS_SetInterruptMaskFromISR( void ) __attribute__((naked));
-extern void OS_ClearInterruptMaskFromISR( uint32_t ulMask )  __attribute__((naked));
+extern void vPortEnterCritical( void );
+extern void vPortExitCritical( void );
+extern uint32_t ulSetInterruptMaskFromISR( void ) __attribute__((naked));
+extern void vClearInterruptMaskFromISR( uint32_t ulMask )  __attribute__((naked));
 
-#define portSET_INTERRUPT_MASK_FROM_ISR()		OS_SetInterruptMaskFromISR()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	OS_ClearInterruptMaskFromISR( x )
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulSetInterruptMaskFromISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vClearInterruptMaskFromISR( x )
 #define portDISABLE_INTERRUPTS()				__asm volatile 	( " cpsid i " )
 #define portENABLE_INTERRUPTS()					__asm volatile 	( " cpsie i " )
-#define portENTER_CRITICAL()					OS_Port_EnterCritical()
-#define portEXIT_CRITICAL()						OS_Port_ExitCritical()
+#define portENTER_CRITICAL()					vPortEnterCritical()
+#define portEXIT_CRITICAL()						vPortExitCritical()
 
 /*-----------------------------------------------------------*/
 
@@ -149,7 +149,7 @@ extern void OS_ClearInterruptMaskFromISR( uint32_t ulMask )  __attribute__((nake
 
 /* Tickless idle/low power functionality. */
 #ifndef portSUPPRESS_TICKS_AND_SLEEP
-	extern void OS_Port_SuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+	extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
 	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
 #endif
 #define portNOP()

@@ -69,7 +69,7 @@
 
 
 /*
- * The simplest possible implementation of OS_Port_Malloc().  Note that this
+ * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
  *
  * See heap_2.c, heap_3.c and heap_4.c for alternative implementations, and the
@@ -108,7 +108,7 @@ static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
 
-void *OS_Port_Malloc( size_t xWantedSize )
+void *pvPortMalloc( size_t xWantedSize )
 {
 void *pvReturn = NULL;
 static uint8_t *pucAlignedHeap = NULL;
@@ -124,7 +124,7 @@ static uint8_t *pucAlignedHeap = NULL;
 	}
 	#endif
 
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		if( pucAlignedHeap == NULL )
 		{
@@ -144,14 +144,14 @@ static uint8_t *pucAlignedHeap = NULL;
 
 		traceMALLOC( pvReturn, xWantedSize );
 	}
-	( void ) OS_Task_ResumeAll();
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
 		if( pvReturn == NULL )
 		{
-			extern void OS_App_MallocFailedHook( void );
-			OS_App_MallocFailedHook();
+			extern void vApplicationMallocFailedHook( void );
+			vApplicationMallocFailedHook();
 		}
 	}
 	#endif
@@ -160,7 +160,7 @@ static uint8_t *pucAlignedHeap = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_Free( void *pv )
+void vPortFree( void *pv )
 {
 	/* Memory cannot be freed using this scheme.  See heap_2.c, heap_3.c and
 	heap_4.c for alternative implementations, and the memory management pages of
@@ -172,14 +172,14 @@ void OS_Port_Free( void *pv )
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_InitialiseBlocks( void )
+void vPortInitialiseBlocks( void )
 {
 	/* Only required when static memory is not cleared. */
 	xNextFreeByte = ( size_t ) 0;
 }
 /*-----------------------------------------------------------*/
 
-size_t OS_Port_GetFreeHeapSize( void )
+size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }

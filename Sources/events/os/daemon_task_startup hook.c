@@ -7,7 +7,7 @@
 
 #include "FreeRTOS.h"
 
-void OS_App_DaemonTaskStartupHook( void )
+void vApplicationDaemonTaskStartupHook( void )
 {
 
 }

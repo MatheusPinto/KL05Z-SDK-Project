@@ -76,7 +76,7 @@
  * PUBLIC LIST API documented in list.h
  *----------------------------------------------------------*/
 
-void OS_List_Initialise( List_t * const pxList )
+void vListInitialise( List_t * const pxList )
 {
 	/* The list structure contains a list item which is used to mark the
 	end of the list.  To initialise the list the list end is inserted
@@ -101,7 +101,7 @@ void OS_List_Initialise( List_t * const pxList )
 }
 /*-----------------------------------------------------------*/
 
-void OS_List_InitialiseItem( ListItem_t * const pxItem )
+void vListInitialiseItem( ListItem_t * const pxItem )
 {
 	/* Make sure the list item is not recorded as being on a list. */
 	pxItem->pvContainer = NULL;
@@ -113,7 +113,7 @@ void OS_List_InitialiseItem( ListItem_t * const pxItem )
 }
 /*-----------------------------------------------------------*/
 
-void OS_List_InsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
+void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
 ListItem_t * const pxIndex = pxList->pxIndex;
 
@@ -142,7 +142,7 @@ ListItem_t * const pxIndex = pxList->pxIndex;
 }
 /*-----------------------------------------------------------*/
 
-void OS_List_Insert( List_t * const pxList, ListItem_t * const pxNewListItem )
+void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
 ListItem_t *pxIterator;
 const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
@@ -209,7 +209,7 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 }
 /*-----------------------------------------------------------*/
 
-UBaseType_t OS_List_Remove( ListItem_t * const pxItemToRemove )
+UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
 {
 /* The list item knows which list it is in.  Obtain the list from the list
 item. */

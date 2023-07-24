@@ -266,7 +266,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * @endverbatim
  */
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-	TimerHandle_t OS_Timer_Create(	const char * const pcTimerName,
+	TimerHandle_t xTimerCreate(	const char * const pcTimerName,
 								const TickType_t xTimerPeriodInTicks,
 								const UBaseType_t uxAutoReload,
 								void * const pvTimerID,
@@ -424,7 +424,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  *
  * See the xTimerCreate() API function example usage scenario.
  */
-void* OS_Timer_GetTimerID( const TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+void *pvTimerGetTimerID( const TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /**
  * void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID );
@@ -445,7 +445,7 @@ void* OS_Timer_GetTimerID( const TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
  *
  * See the xTimerCreate() API function example usage scenario.
  */
-void OS_Timer_SetTimerID( TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCTION;
+void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCTION;
 
 /**
  * BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer );
@@ -482,7 +482,7 @@ void OS_Timer_SetTimerID( TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCT
  * }
  * @endverbatim
  */
-BaseType_t OS_Timer_IsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /**
  * TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
@@ -490,7 +490,7 @@ BaseType_t OS_Timer_IsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
  * Simply returns the handle of the timer service/daemon task.  It it not valid
  * to call xTimerGetTimerDaemonTaskHandle() before the scheduler has been started.
  */
-TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
+TaskHandle_t xTimerGetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
 
 /**
  * BaseType_t xTimerStart( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -542,7 +542,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * See the xTimerCreate() API function example usage scenario.
  *
  */
-#define OS_Timer_Start( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
+#define xTimerStart( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerStop( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -584,7 +584,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * See the xTimerCreate() API function example usage scenario.
  *
  */
-#define OS_Timer_Stop( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0U, NULL, ( xTicksToWait ) )
+#define xTimerStop( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0U, NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerChangePeriod( 	TimerHandle_t xTimer,
@@ -664,7 +664,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
- #define OS_Timer_ChangePeriod( xTimer, xNewPeriod, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xTicksToWait ) )
+ #define xTimerChangePeriod( xTimer, xNewPeriod, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerDelete( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -702,7 +702,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  *
  * See the xTimerChangePeriod() API function example usage scenario.
  */
-#define OS_Timer_Delete( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_DELETE, 0U, NULL, ( xTicksToWait ) )
+#define xTimerDelete( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_DELETE, 0U, NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerReset( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -826,7 +826,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
-#define OS_Timer_Reset( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
+#define xTimerReset( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerStartFromISR( 	TimerHandle_t xTimer,
@@ -912,7 +912,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
-#define OS_Timer_StartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerStopFromISR( 	TimerHandle_t xTimer,
@@ -975,7 +975,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
-#define OS_Timer_StopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP_FROM_ISR, 0, ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP_FROM_ISR, 0, ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerChangePeriodFromISR( TimerHandle_t xTimer,
@@ -1048,7 +1048,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
-#define OS_Timer_ChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD_FROM_ISR, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD_FROM_ISR, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerResetFromISR( 	TimerHandle_t xTimer,
@@ -1134,7 +1134,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  * }
  * @endverbatim
  */
-#define OS_Timer_ResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
 
 /**
@@ -1225,7 +1225,7 @@ TaskHandle_t OS_Timer_GetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  *	}
  * @endverbatim
  */
-BaseType_t OS_Timer_PendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
  /**
   * BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
@@ -1259,7 +1259,7 @@ BaseType_t OS_Timer_PendFunctionCallFromISR( PendedFunction_t xFunctionToPend, v
   * timer daemon task, otherwise pdFALSE is returned.
   *
   */
-BaseType_t OS_Timer_PendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /**
  * const char * const pcTimerGetName( TimerHandle_t xTimer );
@@ -1270,7 +1270,7 @@ BaseType_t OS_Timer_PendFunctionCall( PendedFunction_t xFunctionToPend, void *pv
  *
  * @return The name assigned to the timer specified by the xTimer parameter.
  */
-const char * OS_Timer_GetName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+const char * pcTimerGetName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * TickType_t xTimerGetPeriod( TimerHandle_t xTimer );
@@ -1281,7 +1281,7 @@ const char * OS_Timer_GetName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*lin
  *
  * @return The period of the timer in ticks.
  */
-TickType_t OS_Timer_GetPeriod( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+TickType_t xTimerGetPeriod( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /**
 * TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer );
@@ -1296,14 +1296,14 @@ TickType_t OS_Timer_GetPeriod( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 * will next expire is returned.  If the timer is not running then the return
 * value is undefined.
 */
-TickType_t OS_Timer_GetExpiryTime( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /*
  * Functions beyond this part are not part of the public API and are intended
  * for use by the kernel only.
  */
-BaseType_t Kernel_Timer_CreateTimerTask( void ) PRIVILEGED_FUNCTION;
-BaseType_t Kernel_Timer_GenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

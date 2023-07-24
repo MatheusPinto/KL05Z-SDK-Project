@@ -112,7 +112,7 @@ static TickType_t xCoRoutineTickCount = 0, xLastTickCount = 0, xPassedTicks = 0;
 	{																												\
 		uxTopCoRoutineReadyPriority = pxCRCB->uxPriority;															\
 	}																												\
-	OS_List_InsertEnd( ( List_t * ) &( pxReadyCoRoutineLists[ pxCRCB->uxPriority ] ), &( pxCRCB->xGenericListItem ) );	\
+	vListInsertEnd( ( List_t * ) &( pxReadyCoRoutineLists[ pxCRCB->uxPriority ] ), &( pxCRCB->xGenericListItem ) );	\
 }
 
 /*
@@ -147,7 +147,7 @@ BaseType_t xReturn;
 CRCB_t *pxCoRoutine;
 
 	/* Allocate the memory that will store the co-routine control block. */
-	pxCoRoutine = ( CRCB_t * ) OS_Port_Malloc( sizeof( CRCB_t ) );
+	pxCoRoutine = ( CRCB_t * ) pvPortMalloc( sizeof( CRCB_t ) );
 	if( pxCoRoutine )
 	{
 		/* If pxCurrentCoRoutine is NULL then this is the first co-routine to
@@ -171,8 +171,8 @@ CRCB_t *pxCoRoutine;
 		pxCoRoutine->pxCoRoutineFunction = pxCoRoutineCode;
 
 		/* Initialise all the other co-routine control block parameters. */
-		OS_List_InitialiseItem( &( pxCoRoutine->xGenericListItem ) );
-		OS_List_InitialiseItem( &( pxCoRoutine->xEventListItem ) );
+		vListInitialiseItem( &( pxCoRoutine->xGenericListItem ) );
+		vListInitialiseItem( &( pxCoRoutine->xEventListItem ) );
 
 		/* Set the co-routine control block as a link back from the ListItem_t.
 		This is so we can get back to the containing CRCB from a generic item
@@ -209,7 +209,7 @@ TickType_t xTimeToWake;
 	/* We must remove ourselves from the ready list before adding
 	ourselves to the blocked list as the same list item is used for
 	both lists. */
-	( void ) OS_List_Remove( ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
+	( void ) uxListRemove( ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
 
 	/* The list item will be inserted in wake time order. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentCoRoutine->xGenericListItem ), xTimeToWake );
@@ -218,20 +218,20 @@ TickType_t xTimeToWake;
 	{
 		/* Wake time has overflowed.  Place this item in the
 		overflow list. */
-		OS_List_Insert( ( List_t * ) pxOverflowDelayedCoRoutineList, ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
+		vListInsert( ( List_t * ) pxOverflowDelayedCoRoutineList, ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
 	}
 	else
 	{
 		/* The wake time has not overflowed, so we can use the
 		current block list. */
-		OS_List_Insert( ( List_t * ) pxDelayedCoRoutineList, ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
+		vListInsert( ( List_t * ) pxDelayedCoRoutineList, ( ListItem_t * ) &( pxCurrentCoRoutine->xGenericListItem ) );
 	}
 
 	if( pxEventList )
 	{
 		/* Also add the co-routine to an event list.  If this is done then the
 		function must be called with interrupts disabled. */
-		OS_List_Insert( pxEventList, &( pxCurrentCoRoutine->xEventListItem ) );
+		vListInsert( pxEventList, &( pxCurrentCoRoutine->xEventListItem ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -249,11 +249,11 @@ static void prvCheckPendingReadyList( void )
 		portDISABLE_INTERRUPTS();
 		{
 			pxUnblockedCRCB = ( CRCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyCoRoutineList) );
-			( void ) OS_List_Remove( &( pxUnblockedCRCB->xEventListItem ) );
+			( void ) uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 		}
 		portENABLE_INTERRUPTS();
 
-		( void ) OS_List_Remove( &( pxUnblockedCRCB->xGenericListItem ) );
+		( void ) uxListRemove( &( pxUnblockedCRCB->xGenericListItem ) );
 		prvAddCoRoutineToReadyQueue( pxUnblockedCRCB );
 	}
 }
@@ -263,7 +263,7 @@ static void prvCheckDelayedList( void )
 {
 CRCB_t *pxCRCB;
 
-	xPassedTicks = OS_Task_GetTickCount() - xLastTickCount;
+	xPassedTicks = xTaskGetTickCount() - xLastTickCount;
 	while( xPassedTicks )
 	{
 		xCoRoutineTickCount++;
@@ -299,12 +299,12 @@ CRCB_t *pxCRCB;
 				have been moved to the pending ready list and the following
 				line is still valid.  Also the pvContainer parameter will have
 				been set to NULL so the following lines are also valid. */
-				( void ) OS_List_Remove( &( pxCRCB->xGenericListItem ) );
+				( void ) uxListRemove( &( pxCRCB->xGenericListItem ) );
 
 				/* Is the co-routine waiting on an event also? */
 				if( pxCRCB->xEventListItem.pvContainer )
 				{
-					( void ) OS_List_Remove( &( pxCRCB->xEventListItem ) );
+					( void ) uxListRemove( &( pxCRCB->xEventListItem ) );
 				}
 			}
 			portENABLE_INTERRUPTS();
@@ -353,12 +353,12 @@ UBaseType_t uxPriority;
 
 	for( uxPriority = 0; uxPriority < configMAX_CO_ROUTINE_PRIORITIES; uxPriority++ )
 	{
-		OS_List_Initialise( ( List_t * ) &( pxReadyCoRoutineLists[ uxPriority ] ) );
+		vListInitialise( ( List_t * ) &( pxReadyCoRoutineLists[ uxPriority ] ) );
 	}
 
-	OS_List_Initialise( ( List_t * ) &xDelayedCoRoutineList1 );
-	OS_List_Initialise( ( List_t * ) &xDelayedCoRoutineList2 );
-	OS_List_Initialise( ( List_t * ) &xPendingReadyCoRoutineList );
+	vListInitialise( ( List_t * ) &xDelayedCoRoutineList1 );
+	vListInitialise( ( List_t * ) &xDelayedCoRoutineList2 );
+	vListInitialise( ( List_t * ) &xPendingReadyCoRoutineList );
 
 	/* Start with pxDelayedCoRoutineList using list1 and the
 	pxOverflowDelayedCoRoutineList using list2. */
@@ -376,8 +376,8 @@ BaseType_t xReturn;
 	event lists and the pending ready list.  This function assumes that a
 	check has already been made to ensure pxEventList is not empty. */
 	pxUnblockedCRCB = ( CRCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
-	( void ) OS_List_Remove( &( pxUnblockedCRCB->xEventListItem ) );
-	OS_List_InsertEnd( ( List_t * ) &( xPendingReadyCoRoutineList ), &( pxUnblockedCRCB->xEventListItem ) );
+	( void ) uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
+	vListInsertEnd( ( List_t * ) &( xPendingReadyCoRoutineList ), &( pxUnblockedCRCB->xEventListItem ) );
 
 	if( pxUnblockedCRCB->uxPriority >= pxCurrentCoRoutine->uxPriority )
 	{

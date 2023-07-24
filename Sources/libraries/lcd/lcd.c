@@ -181,7 +181,7 @@ lcdHandle_t* LCD_Init(
 	lcdAdapter_t *adapter, uint8_t cols, uint8_t lines, uint8_t char_size
 )
 {
-	EmbUtil_Assert(adapter);
+	SYSTEM_ASSERT( adapter );
 
 	lcdHandle_t *handle = (lcdHandle_t*)CreateObject(LCD_OBJECT_IS_HANDLE);
 	lcdConfig_t *config = (lcdConfig_t*)CreateObject(LCD_OBJECT_IS_CONFIG);

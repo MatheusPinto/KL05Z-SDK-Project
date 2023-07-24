@@ -6,7 +6,7 @@
  */
 #include "FreeRTOS.h"
 
-void OS_App_TickHook( void )
+void vApplicationTickHook( void )
 {
 
 }

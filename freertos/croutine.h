@@ -170,7 +170,7 @@ typedef struct corCoRoutineControlBlock
  * \defgroup xCoRoutineCreate xCoRoutineCreate
  * \ingroup Tasks
  */
-BaseType_t OS_CoRoutine_Create( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t uxPriority, UBaseType_t uxIndex );
+BaseType_t xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t uxPriority, UBaseType_t uxIndex );
 
 
 /**
@@ -212,7 +212,7 @@ BaseType_t OS_CoRoutine_Create( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t ux
  * \defgroup vCoRoutineSchedule vCoRoutineSchedule
  * \ingroup Tasks
  */
-void OS_CoRoutine_Schedule( void );
+void vCoRoutineSchedule( void );
 
 /**
  * croutine. h
@@ -744,7 +744,7 @@ void OS_CoRoutine_Schedule( void );
  * Removes the current co-routine from its ready list and places it in the
  * appropriate delayed list.
  */
-void Kernel_CoRoutine_AddToDelayedList( TickType_t xTicksToDelay, List_t *pxEventList );
+void vCoRoutineAddToDelayedList( TickType_t xTicksToDelay, List_t *pxEventList );
 
 /*
  * This function is intended for internal use by the queue implementation only.
@@ -753,7 +753,7 @@ void Kernel_CoRoutine_AddToDelayedList( TickType_t xTicksToDelay, List_t *pxEven
  * Removes the highest priority co-routine from the event list and places it in
  * the pending ready list.
  */
-BaseType_t OS_CoRoutine_RemoveFromEventList( const List_t *pxEventList );
+BaseType_t xCoRoutineRemoveFromEventList( const List_t *pxEventList );
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,7 @@
  * @file arguments.c
  * @brief This example implement a simple command argument parser
  */
-#include "parser.h"
+#include "libraries/parser/parser.h"
 #include <string.h>
 
 /**

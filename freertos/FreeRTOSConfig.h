@@ -82,12 +82,14 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
+#include "MKL05Z4.h"
+
 #define configUSE_PREEMPTION                    1
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configTICK_RATE_HZ                      ((TickType_t)1000)
 #define configMAX_PRIORITIES                    5
-#define configMINIMAL_STACK_SIZE                ((unsigned short)90)
+#define configMINIMAL_STACK_SIZE                ((unsigned short)40)
 #define configMAX_TASK_NAME_LEN                 20
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
@@ -107,7 +109,7 @@
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   ((size_t)(3400))
+#define configTOTAL_HEAP_SIZE                   ((size_t)(1900))
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -119,7 +121,11 @@
 
 /* Run time and task stats gathering related definitions. */
 #define configGENERATE_RUN_TIME_STATS           0
+#ifdef SEGGER_SYSVIEW_TOOL
 #define configUSE_TRACE_FACILITY                1
+#else
+#define configUSE_TRACE_FACILITY                0
+#endif
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
 /* Co-routine related definitions. */
@@ -146,7 +152,11 @@
 #define INCLUDE_xTaskGetSchedulerState          1
 #define INCLUDE_xTaskGetCurrentTaskHandle       1
 #define INCLUDE_uxTaskGetStackHighWaterMark     0
+#ifdef SEGGER_SYSVIEW_TOOL
+#define INCLUDE_xTaskGetIdleTaskHandle          1
+#else
 #define INCLUDE_xTaskGetIdleTaskHandle          0
+#endif
 #define INCLUDE_eTaskGetState                   0
 #define INCLUDE_xEventGroupSetBitFromISR        1
 #define INCLUDE_xTimerPendFunctionCall          0
@@ -156,8 +166,12 @@
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
-#define Kernel_Port_SVCHandler SVC_Handler
-#define Kernel_Port_PendSVHandler PendSV_Handler
-#define Kernel_Port_SysTickHandler SysTick_Handler
+#define vPortSVCHandler SVC_Handler
+#define xPortPendSVHandler PendSV_Handler
+#define xPortSysTickHandler SysTick_Handler
+
+#ifdef SEGGER_SYSVIEW_TOOL
+#include "SEGGER_SYSVIEW_FreeRTOS.h"
+#endif
 
 #endif /* FREERTOS_CONFIG_H */

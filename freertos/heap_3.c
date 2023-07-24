@@ -97,16 +97,16 @@ task.h is included from an application file. */
 
 /*-----------------------------------------------------------*/
 
-void *OS_Port_Malloc( size_t xWantedSize )
+void *pvPortMalloc( size_t xWantedSize )
 {
 void *pvReturn;
 
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		pvReturn = malloc( xWantedSize );
 		traceMALLOC( pvReturn, xWantedSize );
 	}
-	( void ) OS_Task_ResumeAll();
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
@@ -122,16 +122,16 @@ void *pvReturn;
 }
 /*-----------------------------------------------------------*/
 
-void OS_Port_Free( void *pv )
+void vPortFree( void *pv )
 {
 	if( pv )
 	{
-		OS_Task_SuspendAll();
+		vTaskSuspendAll();
 		{
 			free( pv );
 			traceFREE( pv, 0 );
 		}
-		( void ) OS_Task_ResumeAll();
+		( void ) xTaskResumeAll();
 	}
 }
 

@@ -1,39 +1,25 @@
 #include "MKL05Z4.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include <semphr.h>
+#include "system/os/os.h"
+#include "system/os/scheduler.h"
+#include "system/os/heap.h"
+#include "system/os/task.h"
+#include "system/os/mutex.h"
 
-SemaphoreHandle_t sem;
+osMutex_t mtx;
 size_t heapSize;
 
-portTASK_FUNCTION(task1, arg)
+OS_TASK_CODE(task1)
 {
-	TickType_t prevTime = OS_Task_GetTickCount();
+	heapSize = OS_Heap_GetFreeSize();
 
-	sem = OS_Semaphore_CreateBinary();
-
-	OS_Semaphore_Give(sem);
-
-	heapSize = OS_Port_GetFreeHeapSize();
-
-	for(;;)
-	{
-		OS_Semaphore_Take(sem, portMAX_DELAY);
-		GPIOB->PTOR = 1 << 9;
-		OS_Task_DelayUntil(&prevTime, 1000/portTICK_RATE_MS);
-		OS_Semaphore_Give(sem);
-	}
+	OS_Mutex_Take(mtx, OS_TIME_INFINITY);
+	GPIOB->PTOR = 1 << 9;
+	OS_Mutex_Give(mtx);
 }
 
-portTASK_FUNCTION(task2, arg)
+OS_TASK_CODE(task2)
 {
-	TickType_t prevTime = OS_Task_GetTickCount();
-
-	for(;;)
-	{
-		GPIOB->PTOR = 1 << 8;
-		OS_Task_DelayUntil(&prevTime, 2000/portTICK_RATE_MS);
-	}
+	GPIOB->PTOR = 1 << 8;
 }
 
 int main(void)
@@ -44,24 +30,24 @@ int main(void)
 	PORTB->PCR[8] |= PORT_PCR_MUX(1);
 	GPIOB->PDDR |= 1 << 8;
 
-	heapSize = OS_Port_GetFreeHeapSize();
+	heapSize = OS_Heap_GetFreeSize();
+
+	mtx = OS_Mutex_Create();
 
 	OS_Task_Create( task1,
 			        "myTask",
 				    configMINIMAL_STACK_SIZE,
-				    NULL,
 				    2,
-				    NULL);
+				    2000);
 
 	OS_Task_Create( task2,
 			        "myTask2",
 				    configMINIMAL_STACK_SIZE,
-				    NULL,
 				    1,
-				    NULL);
+				    1000);
 
-
-	OS_Task_StartScheduler();
+	OS_Scheduler_SetPolicy( OS_SCHED_RM );
+	OS_Scheduler_Start();
 
 	return 0;
 }

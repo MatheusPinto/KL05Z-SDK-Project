@@ -132,7 +132,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	EventGroupHandle_t OS_EventGroup_CreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
+	EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
 	{
 	EventGroup_t *pxEventBits;
 
@@ -145,7 +145,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 		if( pxEventBits != NULL )
 		{
 			pxEventBits->uxEventBits = 0;
-			OS_List_Initialise( &( pxEventBits->xTasksWaitingForBits ) );
+			vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
 
 			#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 			{
@@ -171,17 +171,17 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	EventGroupHandle_t OS_EventGroup_Create( void )
+	EventGroupHandle_t xEventGroupCreate( void )
 	{
 	EventGroup_t *pxEventBits;
 
 		/* Allocate the event group. */
-		pxEventBits = ( EventGroup_t * ) OS_Port_Malloc( sizeof( EventGroup_t ) );
+		pxEventBits = ( EventGroup_t * ) pvPortMalloc( sizeof( EventGroup_t ) );
 
 		if( pxEventBits != NULL )
 		{
 			pxEventBits->uxEventBits = 0;
-			OS_List_Initialise( &( pxEventBits->xTasksWaitingForBits ) );
+			vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
 
 			#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			{
@@ -205,7 +205,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-EventBits_t OS_EventGroup_Sync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
+EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
 {
 EventBits_t uxOriginalBitValue, uxReturn;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
@@ -216,15 +216,15 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 	configASSERT( uxBitsToWaitFor != 0 );
 	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 	{
-		configASSERT( !( ( Kernel_Task_GetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	}
 	#endif
 
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		uxOriginalBitValue = pxEventBits->uxEventBits;
 
-		( void ) OS_EventGroup_SetBits( xEventGroup, uxBitsToSet );
+		( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
 
 		if( ( ( uxOriginalBitValue | uxBitsToSet ) & uxBitsToWaitFor ) == uxBitsToWaitFor )
 		{
@@ -246,7 +246,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 				/* Store the bits that the calling task is waiting for in the
 				task's event list item so the kernel knows when a match is
 				found.  Then enter the blocked state. */
-				Kernel_Task_PlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
+				vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
 
 				/* This assignment is obsolete as uxReturn will get set after
 				the task unblocks, but some compilers mistakenly generate a
@@ -262,7 +262,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 			}
 		}
 	}
-	xAlreadyYielded = OS_Task_ResumeAll();
+	xAlreadyYielded = xTaskResumeAll();
 
 	if( xTicksToWait != ( TickType_t ) 0 )
 	{
@@ -279,7 +279,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 		point either the required bits were set or the block time expired.  If
 		the required bits were set they will have been stored in the task's
 		event list item, and they should now be retrieved then cleared. */
-		uxReturn = Kernel_Task_ResetEventItemValue();
+		uxReturn = uxTaskResetEventItemValue();
 
 		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
 		{
@@ -321,7 +321,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-EventBits_t OS_EventGroup_WaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
+EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
 {
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn, uxControlBits = 0;
@@ -335,11 +335,11 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 	configASSERT( uxBitsToWaitFor != 0 );
 	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 	{
-		configASSERT( !( ( Kernel_Task_GetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	}
 	#endif
 
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
 
@@ -396,7 +396,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 			/* Store the bits that the calling task is waiting for in the
 			task's event list item so the kernel knows when a match is
 			found.  Then enter the blocked state. */
-			Kernel_Task_PlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
+			vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
 
 			/* This is obsolete as it will get set after the task unblocks, but
 			some compilers mistakenly generate a warning about the variable
@@ -406,7 +406,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 			traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
 		}
 	}
-	xAlreadyYielded = OS_Task_ResumeAll();
+	xAlreadyYielded = xTaskResumeAll();
 
 	if( xTicksToWait != ( TickType_t ) 0 )
 	{
@@ -423,7 +423,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 		point either the required bits were set or the block time expired.  If
 		the required bits were set they will have been stored in the task's
 		event list item, and they should now be retrieved then cleared. */
-		uxReturn = Kernel_Task_ResetEventItemValue();
+		uxReturn = uxTaskResetEventItemValue();
 
 		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
 		{
@@ -469,7 +469,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-EventBits_t OS_EventGroup_ClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
 {
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn;
@@ -498,12 +498,12 @@ EventBits_t uxReturn;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
 
-	BaseType_t OS_EventGroup_ClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+	BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
 	{
 		BaseType_t xReturn;
 
 		traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
-		xReturn = OS_Timer_PendFunctionCallFromISR( Kernel_EventGroup_ClearBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToClear, NULL );
+		xReturn = xTimerPendFunctionCallFromISR( vEventGroupClearBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToClear, NULL );
 
 		return xReturn;
 	}
@@ -511,7 +511,7 @@ EventBits_t uxReturn;
 #endif
 /*-----------------------------------------------------------*/
 
-EventBits_t OS_EventGroup_GetBitsFromISR( EventGroupHandle_t xEventGroup )
+EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
 UBaseType_t uxSavedInterruptStatus;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
@@ -527,7 +527,7 @@ EventBits_t uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-EventBits_t OS_EventGroup_SetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
+EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
 {
 ListItem_t *pxListItem, *pxNext;
 ListItem_t const *pxListEnd;
@@ -543,7 +543,7 @@ BaseType_t xMatchFound = pdFALSE;
 
 	pxList = &( pxEventBits->xTasksWaitingForBits );
 	pxListEnd = listGET_END_MARKER( pxList ); /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
 
@@ -602,7 +602,7 @@ BaseType_t xMatchFound = pdFALSE;
 				eventUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
 				that is was unblocked due to its required bits matching, rather
 				than because it timed out. */
-				( void ) Kernel_Task_RemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUNBLOCKED_DUE_TO_BIT_SET );
+				( void ) xTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUNBLOCKED_DUE_TO_BIT_SET );
 			}
 
 			/* Move onto the next list item.  Note pxListItem->pxNext is not
@@ -615,18 +615,18 @@ BaseType_t xMatchFound = pdFALSE;
 		bit was set in the control word. */
 		pxEventBits->uxEventBits &= ~uxBitsToClear;
 	}
-	( void ) OS_Task_ResumeAll();
+	( void ) xTaskResumeAll();
 
 	return pxEventBits->uxEventBits;
 }
 /*-----------------------------------------------------------*/
 
-void OS_EventGroup_Delete( EventGroupHandle_t xEventGroup )
+void vEventGroupDelete( EventGroupHandle_t xEventGroup )
 {
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
-	OS_Task_SuspendAll();
+	vTaskSuspendAll();
 	{
 		traceEVENT_GROUP_DELETE( xEventGroup );
 
@@ -635,14 +635,14 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 			/* Unblock the task, returning 0 as the event list is being deleted
 			and	cannot therefore have any bits set. */
 			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
-			( void ) Kernel_Task_RemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
+			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
 		}
 
 		#if( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 0 ) )
 		{
 			/* The event group can only have been allocated dynamically - free
 			it again. */
-			OS_Port_Free( pxEventBits );
+			vPortFree( pxEventBits );
 		}
 		#elif( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 		{
@@ -650,7 +650,7 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 			dynamically, so check before attempting to free the memory. */
 			if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
 			{
-				OS_Port_Free( pxEventBits );
+				vPortFree( pxEventBits );
 			}
 			else
 			{
@@ -659,23 +659,23 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 		}
 		#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 	}
-	( void ) OS_Task_ResumeAll();
+	( void ) xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
 /* For internal use only - execute a 'set bits' command that was pended from
 an interrupt. */
-void Kernel_EventGroup_SetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
+void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
 {
-	( void ) OS_EventGroup_SetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
+	( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
 }
 /*-----------------------------------------------------------*/
 
 /* For internal use only - execute a 'clear bits' command that was pended from
 an interrupt. */
-void Kernel_EventGroup_ClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear )
+void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear )
 {
-	( void ) OS_EventGroup_ClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear );
+	( void ) xEventGroupClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear );
 }
 /*-----------------------------------------------------------*/
 
@@ -716,12 +716,12 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
 
-	BaseType_t OS_EventGroup_SetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
+	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	BaseType_t xReturn;
 
 		traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
-		xReturn = OS_Timer_PendFunctionCallFromISR( Kernel_EventGroup_SetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
+		xReturn = xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
 
 		return xReturn;
 	}
@@ -731,7 +731,7 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 #if (configUSE_TRACE_FACILITY == 1)
 
-	UBaseType_t Kernel_EventGroup_GetNumber( void* xEventGroup )
+	UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
 	{
 	UBaseType_t xReturn;
 	EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
