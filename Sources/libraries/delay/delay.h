@@ -45,7 +45,7 @@
 #endif
 
 /* TODO: insert other definitions and declarations here. */
-#include <mcu/common.h> /*!< To call specific Kinetis SDK clock API to use in DELAY_CLOCK_FREQUENCY macro!*/
+#include "mcu/common.h" /*!< To call specific Kinetis SDK clock API to use in DELAY_CLOCK_FREQUENCY macro!*/
 
 #ifdef __cplusplus
 extern "C" {
