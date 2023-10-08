@@ -112,7 +112,7 @@ typedef struct
 	uint8_t char_size;
 
 	/*!< The LCD bus. */
-	lcdAdapter_t *adapter;
+	lcdAdapter_t adapter;
 } lcdConfig_t;
 
 /*!
@@ -184,7 +184,7 @@ typedef struct
  *         - NULL, if was not possible to create the handle.
  */
 lcdHandle_t* LCD_Init(
-	lcdAdapter_t *adapter, uint8_t cols, uint8_t lines, uint8_t char_size
+	lcdAdapter_t adapter, uint8_t cols, uint8_t lines, uint8_t char_size
 );
 
 /**

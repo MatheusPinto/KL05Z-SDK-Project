@@ -140,7 +140,7 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 #else
 	lcdPin_t data[4],
 #endif
-	lcdPin_t reset, lcdPin_t enable
+	lcdPin_t *reset, lcdPin_t *enable
 )
 {
 	lcdParallelHardwareAdapter_t *adapter = AllocAdapter();
@@ -163,11 +163,15 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 
 	for (int i = 0; i < limit; ++i)
 	{
-		((unsigned char*)(adapter->data))[i] = ((unsigned char*)data)[i];
+		adapter->data[i].portRegister = data[i].portRegister;
+		adapter->data[i].pinMask = data[i].pinMask;
+		//((unsigned char*)(adapter->data))[i] = ((unsigned char*)data)[i];
 	}
 
-	adapter->en = enable;
-	adapter->rs = reset;
+	adapter->en.pinMask = enable->pinMask;
+	adapter->en.portRegister = enable->portRegister;
+	adapter->rs.pinMask = reset->pinMask;
+	adapter->rs.portRegister = reset->portRegister;
 
 	return adapter;
 }
@@ -184,7 +188,7 @@ void LCD_ParallelWriteBits(
 )
 {
 	/** Reinterprets the adapter */
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config);
+	lcdParallelHardwareAdapter_t *adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
 
 	/** Set or Clear RS based on mode */
 	if (mode)
@@ -244,7 +248,7 @@ void LCD_ParallelWriteBits(
  */
 void EnablePulseParallel(lcdHandle_t* handle)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config);
+	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
 
 	MCU_PortClear(adapter->en.portRegister, adapter->en.pinMask);
 	Waitus(1);

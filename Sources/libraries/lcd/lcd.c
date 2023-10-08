@@ -178,7 +178,7 @@ void DestroyObject(uint8_t objectType, void *object)
  *         - NULL, if was not possible to create the handle.
  */
 lcdHandle_t* LCD_Init(
-	lcdAdapter_t *adapter, uint8_t cols, uint8_t lines, uint8_t char_size
+	lcdAdapter_t adapter, uint8_t cols, uint8_t lines, uint8_t char_size
 )
 {
 	SYSTEM_ASSERT( adapter );

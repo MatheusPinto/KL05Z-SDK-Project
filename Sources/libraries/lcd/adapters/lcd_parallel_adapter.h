@@ -55,7 +55,7 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 #else
 	lcdPin_t data[4],
 #endif
-	lcdPin_t reset, lcdPin_t enable
+	lcdPin_t *reset, lcdPin_t *enable
 );
 
 /**
