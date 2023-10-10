@@ -1,3 +1,26 @@
+/**
+ * @file	lcd_parallel_adapter.c
+ * @author  JOAO MARIO CARNIELETTO IZOTON LAGO <joao.mario.lago@hotmail.com>
+ * @version 1.0
+ * @date    2023
+ *
+ * @section LICENSE
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details at
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * @section DESCRIPTION
+ *
+ * The HD44780 hardware parallel interface adapter driver.
+ */
 
 /** std */
 #include <stddef.h>
@@ -9,22 +32,6 @@
 #include "libraries/delay/delay.h"
 
 #ifndef LCD_DISABLE_PARALLEL_ADAPTER
-
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
-
-#define MCU_PortSet(portPinsRegister, portPinMask) portPinsRegister->PSOR = portPinMask;
-
-#define MCU_PortClear(portPinsRegister, portPinMask) portPinsRegister->PCOR = portPinMask;
-
-/* waiting macros */
-#define Waitns(x) \
-		Delay_Waitns(x)				 /* Wait x ns */
-#define Waitus(x) \
-		Delay_Waitus(x)				 /* Wait x us */
-#define Waitms(x) \
-		Delay_Waitms(x)				 /* Wait x ms */
 
 /*******************************************************************************
  * Structures
@@ -75,7 +82,7 @@ static uint8_t g_staticParallelAdaptersCreated;
  *
  */
 void LCD_ParallelWriteBits(
-	lcdHandle_t* handle, uint8_t value, uint8_t is_expanded, uint8_t mode
+		lcdAdapter_t adapter, uint8_t value, uint8_t is_expanded, uint8_t mode
 );
 
 /**
@@ -90,7 +97,7 @@ static lcdParallelHardwareAdapter_t* AllocAdapter();
  * 
  * @param handle LCD handler object instance
  */
-void EnablePulseParallel(lcdHandle_t* handle);
+void EnablePulseParallel(lcdAdapter_t adapter);
 
 /**
  * @brief Sets reset bit on LCD display using parallel adapter
@@ -98,7 +105,7 @@ void EnablePulseParallel(lcdHandle_t* handle);
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelSetRs(lcdHandle_t* handle);
+void LCD_ParallelSetRs(lcdAdapter_t adapter);
 
 /**
  * @brief Clear reset bit on LCD display using parallel adapter
@@ -106,7 +113,7 @@ void LCD_ParallelSetRs(lcdHandle_t* handle);
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelClrRs(lcdHandle_t* handle);
+void LCD_ParallelClrRs(lcdAdapter_t adapter);
 
 /**
  * @brief Sets enable bit on LCD display using parallel adapter
@@ -114,7 +121,7 @@ void LCD_ParallelClrRs(lcdHandle_t* handle);
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelSetEn(lcdHandle_t* handle);
+void LCD_ParallelSetEn(lcdAdapter_t adapter);
 
 /**
  * @brief Clear reset bit on LCD display using parallel adapter
@@ -122,18 +129,12 @@ void LCD_ParallelSetEn(lcdHandle_t* handle);
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelClrEn(lcdHandle_t* handle);
+void LCD_ParallelClrEn(lcdAdapter_t adapter);
 
 /*******************************************************************************
  * Functions
  ******************************************************************************/
 
-/**
- * @brief Creates a Parallel hardware adaptor configuration object.
- *
- * @return - Created I2C LCD hardware configuration object based on provided
- *					 parameters.
- */
 lcdAdapter_t LCD_CreateParallelAdapter(
 #ifdef LCD_8_BIT_MODE
 	lcdPin_t data[8],
@@ -178,7 +179,7 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 /**
  * @brief Dispatches a given byte of data to display
  *
- * @param handle - LCD handler object instance
+ * @param handle - LCD adapter object instance
  * @param value - Byte to be sent to LCD display
  * @param is_expanded - a boolean value used only in I2C adapter
  * @param mode -
@@ -187,63 +188,65 @@ lcdAdapter_t LCD_CreateParallelAdapter(
  *
  */
 void LCD_ParallelWriteBits(
-	lcdHandle_t* handle, uint8_t value, uint8_t is_expanded, uint8_t mode
+		lcdAdapter_t adapter, uint8_t value, uint8_t is_expanded, uint8_t mode
 )
 {
 	/** Reinterprets the adapter */
-	lcdParallelHardwareAdapter_t *adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
 
 	/** Set or Clear RS based on mode */
 	if (mode)
 	{
-		LCD_ParallelSetRs(handle);
+		LCD_ParallelSetRs(lcdAdapter); // Is a data
 	}
 	else
 	{
-		LCD_ParallelClrRs(handle);
+		LCD_ParallelClrRs(lcdAdapter); // Is a command
 	}
 
 	/** Dispatches the data */
 #ifdef LCD_4_BIT_MODE
+	/** Dispatches most significant nibble */
 	for (int i = 0; i < 4; ++i)
 	{
 		if((value >> 4 >> i) & 0x01)
 		{
-			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortSet(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 		else
 		{
-			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortClear(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 	}
-	EnablePulseParallel(handle);
+	EnablePulseParallel(adapter);
 
+	/** Dispatches least significant nibble */
 	for (int i = 0; i < 4; ++i)
 	{
 		if((value >> i) & 0x01)
 		{
-			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortSet(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 		else
 		{
-			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortClear(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 	}
-	EnablePulseParallel(handle);
+	EnablePulseParallel(lcdAdapter);
 
 #else
 	for (int i = 0; i < 8; ++i)
 	{
 		if((value >> i) & 0x01)
 		{
-			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortSet(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 		else
 		{
-			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
+			MCU_PortClear(lcdAdapter->data[i].portRegister, lcdAdapter->data[i].pinMask);
 		}
 	}
-	EnablePulseParallel(handle);
+	EnablePulseParallel(lcdAdapter);
 #endif
 }
 
@@ -252,15 +255,15 @@ void LCD_ParallelWriteBits(
  * 
  * @param handle LCD handler object instance
  */
-void EnablePulseParallel(lcdHandle_t* handle)
+void EnablePulseParallel(lcdAdapter_t adapter)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
 
-	MCU_PortClear(adapter->en.portRegister, adapter->en.pinMask);
+	MCU_PortClear(lcdAdapter->en.portRegister, lcdAdapter->en.pinMask);
 	Waitus(1);
-	MCU_PortSet(adapter->en.portRegister, adapter->en.pinMask);
+	MCU_PortSet(lcdAdapter->en.portRegister, lcdAdapter->en.pinMask);
 	Waitus(1);
-	MCU_PortClear(adapter->en.portRegister, adapter->en.pinMask);
+	MCU_PortClear(lcdAdapter->en.portRegister, lcdAdapter->en.pinMask);
 	Waitus(100);
 }
 
@@ -270,10 +273,10 @@ void EnablePulseParallel(lcdHandle_t* handle)
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelSetRs(lcdHandle_t* handle)
+void LCD_ParallelSetRs(lcdAdapter_t adapter)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
-	MCU_PortSet(adapter->rs.portRegister, adapter->rs.pinMask)
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
+	MCU_PortSet(lcdAdapter->rs.portRegister, lcdAdapter->rs.pinMask)
 }
 
 /**
@@ -282,10 +285,10 @@ void LCD_ParallelSetRs(lcdHandle_t* handle)
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelClrRs(lcdHandle_t* handle)
+void LCD_ParallelClrRs(lcdAdapter_t adapter)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
-	MCU_PortClear(adapter->rs.portRegister, adapter->rs.pinMask)
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
+	MCU_PortClear(lcdAdapter->rs.portRegister, lcdAdapter->rs.pinMask)
 }
 
 /**
@@ -294,10 +297,10 @@ void LCD_ParallelClrRs(lcdHandle_t* handle)
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelSetEn(lcdHandle_t* handle)
+void LCD_ParallelSetEn(lcdAdapter_t adapter)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
-	MCU_PortSet(adapter->en.portRegister, adapter->en.pinMask)
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
+	MCU_PortSet(lcdAdapter->en.portRegister, lcdAdapter->en.pinMask)
 }
 
 /**
@@ -306,10 +309,10 @@ void LCD_ParallelSetEn(lcdHandle_t* handle)
  * @param handle - LCD handler object instance
  *
  */
-void LCD_ParallelClrEn(lcdHandle_t* handle)
+void LCD_ParallelClrEn(lcdAdapter_t adapter)
 {
-	lcdParallelHardwareAdapter_t* adapter = (lcdParallelHardwareAdapter_t*)(handle->config->adapter);
-	MCU_PortClear(adapter->en.portRegister, adapter->en.pinMask)
+	lcdParallelHardwareAdapter_t* lcdAdapter = (adapter);
+	MCU_PortClear(lcdAdapter->en.portRegister, lcdAdapter->en.pinMask)
 }
 
 /**

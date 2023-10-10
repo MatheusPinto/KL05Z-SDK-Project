@@ -29,14 +29,6 @@
 /* Register select bit */
 #define RS_BYTE 0b00000001
 
-/* waiting macros */
-#define Waitns(x) \
-		Delay_Waitns(x)				 /* Wait x ns */
-#define Waitus(x) \
-		Delay_Waitus(x)				 /* Wait x us */
-#define Waitms(x) \
-		Delay_Waitms(x)				 /* Wait x ms */
-
 /*******************************************************************************
  * Structures
  ******************************************************************************/
@@ -79,7 +71,7 @@ static uint8_t g_staticI2CAdaptersCreated;
  *
  */
 void LCD_I2CWriteBits(
-	lcdHandle_t* handle, uint8_t value, uint8_t is_expanded, uint8_t mode
+		lcdAdapter_t adapter, uint8_t value, uint8_t is_expanded, uint8_t mode
 );
 
 /**
@@ -87,7 +79,7 @@ void LCD_I2CWriteBits(
  * 
  * @param handle LCD handler object instance
  */
-void EnablePulseI2C(lcdHandle_t* handle, uint8_t value);
+void EnablePulseI2C(lcdAdapter_t adapter, uint8_t value);
 
 /**
  * @brief Internal function to allocate a given adapter
@@ -105,7 +97,7 @@ lcdI2CHardwareAdapter_t* AllocAdapter();
  * 
  * @param handle LCD handle instance
  */
-static void callback_incinerator(lcdHandle_t* handle)
+static void callback_incinerator(lcdAdapter_t adapter)
 {
 	/** Goodbye :) */
 }
@@ -155,25 +147,26 @@ lcdAdapter_t LCD_CreateI2CAdapter(
  *
  */
 void LCD_I2CWriteBits(
-	lcdHandle_t* handle, uint8_t value, uint8_t is_expanded, uint8_t mode
+		lcdAdapter_t adapter, uint8_t value, uint8_t is_expanded, uint8_t mode
 )
 {
-	lcdI2CHardwareAdapter_t* adapter = (lcdI2CHardwareAdapter_t*)(handle->config->adapter);
+	/** Reinterprets the adapter */
+	lcdI2CHardwareAdapter_t* lcdAdapter = (adapter);
 
 	if (is_expanded)
 	{
-		I2C_WriteSlave(adapter->base, adapter->slave_addr, value);
+		I2C_WriteSlave(lcdAdapter->base, lcdAdapter->slave_addr, value);
 	}
 	else
 	{
 		uint8_t h_nibble = (value & 0xf0) | mode;
 		uint8_t l_nibble = ((value << 4) & 0xf0) | mode;
 
-		I2C_WriteSlave(adapter->base, adapter->slave_addr, h_nibble);
-		EnablePulseI2C(handle, h_nibble);
+		I2C_WriteSlave(lcdAdapter->base, lcdAdapter->slave_addr, h_nibble);
+		EnablePulseI2C(adapter, h_nibble);
 
-		I2C_WriteSlave(adapter->base, adapter->slave_addr, l_nibble);
-		EnablePulseI2C(handle, l_nibble);
+		I2C_WriteSlave(lcdAdapter->base, lcdAdapter->slave_addr, l_nibble);
+		EnablePulseI2C(adapter, l_nibble);
 	}
 }
 
@@ -182,16 +175,17 @@ void LCD_I2CWriteBits(
  * 
  * @param handle LCD handler object instance
  */
-void EnablePulseI2C(lcdHandle_t* handle, uint8_t value)
+void EnablePulseI2C(lcdAdapter_t adapter, uint8_t value)
 {
-	lcdI2CHardwareAdapter_t* adapter = (lcdI2CHardwareAdapter_t*)(handle->config->adapter);
+	/** Reinterprets the adapter */
+	lcdI2CHardwareAdapter_t* lcdAdapter = (adapter);
 
 	// En high
-	I2C_WriteSlave(adapter->base, adapter->slave_addr, value | EN_BYTE);
+	I2C_WriteSlave(lcdAdapter->base, lcdAdapter->slave_addr, value | EN_BYTE);
 	Waitus(2);
 
 	// En low
-	I2C_WriteSlave(adapter->base, adapter->slave_addr, value | ~EN_BYTE);
+	I2C_WriteSlave(lcdAdapter->base, lcdAdapter->slave_addr, value | ~EN_BYTE);
 	Waitus(100);
 }
 

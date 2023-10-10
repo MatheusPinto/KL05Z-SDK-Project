@@ -1,3 +1,27 @@
+/**
+ * @file	lcd_parallel_adapter.h
+ * @author  JOAO MARIO CARNIELETTO IZOTON LAGO <joao.mario.lago@hotmail.com>
+ * @version 1.0
+ * @date    2023
+ *
+ * @section LICENSE
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details at
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * @section DESCRIPTION
+ *
+ * The HD44780 hardware parallel interface adapter driver.
+ */
+
 #ifndef LCD_HD44780_I2C_HARDWARE_ADAPTER_H_
 #define LCD_HD44780_I2C_HARDWARE_ADAPTER_H_
 
