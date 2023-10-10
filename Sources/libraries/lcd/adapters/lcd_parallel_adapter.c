@@ -140,7 +140,7 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 #else
 	lcdPin_t data[4],
 #endif
-	lcdPin_t *reset, lcdPin_t *enable
+	lcdPin_t *rsPin, lcdPin_t *enPin
 )
 {
 	lcdParallelHardwareAdapter_t *adapter = AllocAdapter();
@@ -165,13 +165,12 @@ lcdAdapter_t LCD_CreateParallelAdapter(
 	{
 		adapter->data[i].portRegister = data[i].portRegister;
 		adapter->data[i].pinMask = data[i].pinMask;
-		//((unsigned char*)(adapter->data))[i] = ((unsigned char*)data)[i];
 	}
 
-	adapter->en.pinMask = enable->pinMask;
-	adapter->en.portRegister = enable->portRegister;
-	adapter->rs.pinMask = reset->pinMask;
-	adapter->rs.portRegister = reset->portRegister;
+	adapter->en.pinMask = enPin->pinMask;
+	adapter->en.portRegister = enPin->portRegister;
+	adapter->rs.pinMask = rsPin->pinMask;
+	adapter->rs.portRegister = rsPin->portRegister;
 
 	return adapter;
 }
@@ -181,6 +180,10 @@ lcdAdapter_t LCD_CreateParallelAdapter(
  *
  * @param handle - LCD handler object instance
  * @param value - Byte to be sent to LCD display
+ * @param is_expanded - a boolean value used only in I2C adapter
+ * @param mode -
+ * 				  \a LCD_COMMAND_MODE - write a command
+ * 				  \a LCD_DATA_MODE - write a character
  *
  */
 void LCD_ParallelWriteBits(
@@ -204,17 +207,6 @@ void LCD_ParallelWriteBits(
 #ifdef LCD_4_BIT_MODE
 	for (int i = 0; i < 4; ++i)
 	{
-		if((value >> i) & 0x01)
-		{
-			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
-		}
-		else
-		{
-			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
-		}
-	}
-	for (int i = 0; i < 4; ++i)
-	{
 		if((value >> 4 >> i) & 0x01)
 		{
 			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
@@ -224,6 +216,21 @@ void LCD_ParallelWriteBits(
 			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
 		}
 	}
+	EnablePulseParallel(handle);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if((value >> i) & 0x01)
+		{
+			MCU_PortSet(adapter->data[i].portRegister, adapter->data[i].pinMask);
+		}
+		else
+		{
+			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
+		}
+	}
+	EnablePulseParallel(handle);
+
 #else
 	for (int i = 0; i < 8; ++i)
 	{
@@ -236,9 +243,8 @@ void LCD_ParallelWriteBits(
 			MCU_PortClear(adapter->data[i].portRegister, adapter->data[i].pinMask);
 		}
 	}
-#endif
-
 	EnablePulseParallel(handle);
+#endif
 }
 
 /**

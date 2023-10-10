@@ -62,6 +62,12 @@ extern "C" {
 #define LCD_BACKLIGHT 0x08
 #define LCD_NOBACKLIGHT 0x00
 
+enum
+{
+	LCD_COMMAND_MODE = 0,
+	LCD_DATA_MODE    = 1
+};
+
 /* !< Defines if LCD instances will be created statically.
  *    If commented, LCD instances will be allocated dynamically in heap.
  */
@@ -154,10 +160,10 @@ typedef struct
 	/*!< Mid level command callback */
 	void (*write)(lcdHandle_t* handle, uint8_t value, uint8_t is_expanded, uint8_t mode);
 
-	/*!< Bus set reset callback */
+	/*!< Bus set rs callback */
 	void (*setRs)(lcdHandle_t* handle);
 
-	/*!< Bus clear reset callback */
+	/*!< Bus clear rs callback */
 	void (*clrRs)(lcdHandle_t* handle);
 
 	/*!< Bus set enable callback */

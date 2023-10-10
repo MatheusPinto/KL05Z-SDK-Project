@@ -226,7 +226,7 @@ lcdHandle_t* LCD_Init(
 	if (adapter_interface->type == LCD_I2C_HARD_ADAPTER)
 	{
 		// Reset expander and turn backlight off (Bit 8 = 1)
-		adapter_interface->write(handle, LCD_BACKLIGHT, true, 0);
+		adapter_interface->write(handle, LCD_BACKLIGHT, true, LCD_COMMAND_MODE);
 		Waitms(1000);
 	}
 	else
@@ -240,16 +240,16 @@ lcdHandle_t* LCD_Init(
 	// this is according to the hitachi HD44780 datasheet
 	// figure 24, pg 46
 	// we start in 8bit mode, try to set 4 bit mode
-	adapter_interface->write(handle, 0x03, false, 0);
+	adapter_interface->write(handle, 0x03, false, LCD_COMMAND_MODE);
 	Waitus(4500); // wait min 4.1ms
 	// second try
-	adapter_interface->write(handle, 0x03, false, 0);
+	adapter_interface->write(handle, 0x03, false, LCD_COMMAND_MODE);
 	Waitus(4500); // wait min 4.1ms
 	// third go!
-	adapter_interface->write(handle, 0x03, false, 0);
+	adapter_interface->write(handle, 0x03, false, LCD_COMMAND_MODE);
 	Waitus(4500);
 	// finally, set to 4-bit interface
-	adapter_interface->write(handle, 0x02, false, 0);
+	adapter_interface->write(handle, 0x02, false, LCD_COMMAND_MODE);
 	Waitus(150);
 #else
 	// this is according to the hitachi HD44780 datasheet
@@ -310,7 +310,7 @@ void LCD_Command(lcdHandle_t *handle, uint8_t value)
 	lcdAdapterInterface_t *adapter = (lcdAdapterInterface_t*)handle->config->adapter;
 
 	/** Call command for current adapter */
-	adapter->write(handle, value, false, 0);
+	adapter->write(handle, value, false, LCD_COMMAND_MODE);
 }
 
 void LCD_Write(lcdHandle_t *handle, uint8_t value)
@@ -319,5 +319,5 @@ void LCD_Write(lcdHandle_t *handle, uint8_t value)
 	lcdAdapterInterface_t *adapter = (lcdAdapterInterface_t*)handle->config->adapter;
 
 	/** Call command for current adapter */
-	adapter->write(handle, value, false, 1);
+	adapter->write(handle, value, false, LCD_DATA_MODE);
 }
