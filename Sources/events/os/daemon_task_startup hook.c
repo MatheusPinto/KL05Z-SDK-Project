@@ -5,7 +5,7 @@
  *      Author: mathe
  */
 
-#include "FreeRTOS.h"
+#include "Freertos/FreeRTOS.h"
 
 void vApplicationDaemonTaskStartupHook( void )
 {

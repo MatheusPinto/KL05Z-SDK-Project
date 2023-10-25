@@ -1,11 +1,5 @@
-/*
- * stack_overflow_hook.c
- *
- *  Created on: 13/06/2023
- *      Author: mathe
- */
-#include "FreeRTOS.h"
-#include "task.h"
+#include "Freertos/FreeRTOS.h"
+#include "Freertos/task.h"
 
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {

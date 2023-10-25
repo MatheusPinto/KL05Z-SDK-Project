@@ -1,15 +1,14 @@
-#include <MKL05Z4.h>
-#include <system/system.h>
+#include "hardware_init.h"
+#include "libraries_init.h"
 
 int main(void)
 {
-	System_Init();
+	Hardware_Init();
+	Libraries_Init();
 
-	for ( ; ; )
-	{
+    for (;;)
+    {
+    }
 
-	}
-
-	return 0;
+    return 0;
 }
-
